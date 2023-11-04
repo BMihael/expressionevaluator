@@ -1,8 +1,8 @@
 package leapwise.soft.expressionevaluator.exception;
 
-public class ValueNotValidException extends RuntimeException{
+public class ValueNotValidException extends RuntimeException {
 
-    public ValueNotValidException(String message){
+    public ValueNotValidException(String message) {
         super(message);
     }
 }

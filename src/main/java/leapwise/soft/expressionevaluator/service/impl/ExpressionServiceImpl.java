@@ -10,7 +10,11 @@ import leapwise.soft.expressionevaluator.service.ExpressionService;
 import leapwise.soft.expressionevaluator.util.ExpressionStripper;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
+
+import static leapwise.soft.expressionevaluator.validation.ExpressionNameFieldValidator.NAME_FIELD_PREFIX;
+import static leapwise.soft.expressionevaluator.validation.ExpressionNameFieldValidator.VALUE_FIELD_PREFIX;
 
 @Service
 public class ExpressionServiceImpl implements ExpressionService {
@@ -23,10 +27,10 @@ public class ExpressionServiceImpl implements ExpressionService {
 
     @Override
     public String processExpression(ExpressionProcessForm expressionProcessForm) {
-        String name = ExpressionStripper.stripField(expressionProcessForm.getName(), "Name: ");
+        String name = ExpressionStripper.stripField(expressionProcessForm.getName(), NAME_FIELD_PREFIX);
         checkIfExpressionNameExists(name);
 
-        String value = ExpressionStripper.stripField(expressionProcessForm.getValue(), "Value: ");
+        String value = ExpressionStripper.stripField(expressionProcessForm.getValue(), VALUE_FIELD_PREFIX);
 
         Expression e = expressionRepository.save(
                 Expression.builder().
