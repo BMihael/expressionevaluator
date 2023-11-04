@@ -32,7 +32,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Object> handleExpressionWithGivenNameAlreadyExistsException (
+    public ResponseEntity<Object> handleExpressionWithGivenNameAlreadyExistsException(
             ExpressionWithGivenNameAlreadyExistsException exception) {
         return ResponseHandler.generateErrorResponse(HttpStatus.BAD_REQUEST,
                 ErrorResponse.builder().message(exception.getMessage()).timestamp(System.currentTimeMillis()).build());

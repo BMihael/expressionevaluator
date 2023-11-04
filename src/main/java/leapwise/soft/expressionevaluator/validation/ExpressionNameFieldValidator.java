@@ -8,6 +8,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class ExpressionNameFieldValidator implements ConstraintValidator<ValidExpressionForm, ExpressionProcessForm> {
+    public static final String NAME_FIELD_PREFIX = "Name: ";
+    public static final String VALUE_FIELD_PREFIX = "Value: ";
+
     private String name;
     private String value;
 
@@ -35,21 +38,19 @@ public class ExpressionNameFieldValidator implements ConstraintValidator<ValidEx
 
     private void isNameValid(String name) {
         if (name == null) {
-            throw new NameNotValidException("Name cannot be null");
+            throw new NameNotValidException("Field name cannot be null");
         }
-        boolean doesNameBeginWithCertainWord = (name.substring(0,6).equals("Name: "));
-        if(!doesNameBeginWithCertainWord){
-            throw new NameNotValidException("Name does not meet criteria");
+        if(!(name.startsWith(NAME_FIELD_PREFIX))){
+            throw new NameNotValidException("Field name does not meet criteria");
         }
     }
 
     private void isValueValid(String value) {
         if (value == null) {
-            throw new ValueNotValidException("Value cannot be null");
+            throw new ValueNotValidException("Field value cannot be null");
         }
-        boolean doesValueBeginWithCertainWord = value.substring(0,7).equals("Value: ");
-        if(!doesValueBeginWithCertainWord){
-            throw new ValueNotValidException("Value does not meet criteria");
+        if(!(value.startsWith(VALUE_FIELD_PREFIX))){
+            throw new ValueNotValidException("Field value does not meet criteria");
         }
     }
 }

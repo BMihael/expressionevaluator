@@ -7,8 +7,6 @@ import leapwise.soft.expressionevaluator.service.impl.ExpressionServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -24,7 +22,7 @@ public class ExpressionControllerImpl implements ExpressionController {
     @Override
     @PostMapping("/expression")
     public String processExpression(@Valid @RequestBody ExpressionProcessForm expressionProcessForm) {
-        return expressionServiceImpl.processExpression(expressionProcessForm); // odvje napraviti mapiranje iz form u dto
+        return expressionServiceImpl.processExpression(expressionProcessForm);
     }
 
     @Override
