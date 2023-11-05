@@ -1,5 +1,6 @@
 package leapwise.soft.expressionevaluator.service.impl;
 
+import leapwise.soft.expressionevaluator.algorithm.tree.TreeProvider;
 import leapwise.soft.expressionevaluator.exception.ExpressionWithGivenNameAlreadyExistsException;
 import leapwise.soft.expressionevaluator.exception.ExpressionWithIdDoesNotExistException;
 import leapwise.soft.expressionevaluator.model.Expression;
@@ -11,6 +12,8 @@ import leapwise.soft.expressionevaluator.util.ExpressionStripper;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static leapwise.soft.expressionevaluator.validation.ExpressionNameFieldValidator.NAME_FIELD_PREFIX;
@@ -44,12 +47,12 @@ public class ExpressionServiceImpl implements ExpressionService {
     @Override
     public String evaluateExpression(ExpressionEvaluationForm expressionEvaluationForm) {
         JSONObject input = new JSONObject(expressionEvaluationForm.getJsonRaw());
-        //input.get("customer");
-
         String id = expressionEvaluationForm.getId();
         Expression expression = findExpressionByIdentifier(id);
-
-        return "Miha";
+        TreeProvider.provideExpression(expression.getExpressionValue());
+        TreeProvider.fillTreeHelper(input);
+        String result = TreeProvider.printResult();
+        return result;
     }
 
     private void checkIfExpressionNameExists(String name) {
