@@ -9,64 +9,71 @@ import leapwise.soft.expressionevaluator.model.form.ExpressionProcessForm;
 import leapwise.soft.expressionevaluator.repository.ExpressionRepository;
 import leapwise.soft.expressionevaluator.service.ExpressionService;
 import leapwise.soft.expressionevaluator.util.ExpressionStripper;
+import leapwise.soft.expressionevaluator.util.ExpressionStripperValues;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-
-import static leapwise.soft.expressionevaluator.validation.ExpressionNameFieldValidator.NAME_FIELD_PREFIX;
-import static leapwise.soft.expressionevaluator.validation.ExpressionNameFieldValidator.VALUE_FIELD_PREFIX;
 
 @Service
 public class ExpressionServiceImpl implements ExpressionService {
 
-    private final ExpressionRepository expressionRepository;
+  public static final String EXCEPTION_WITH_NAME_ALREADY_EXISTS_IN_DATABASE =
+      "An exception with the provided name already exists in the database.";
+  public static final String EXCEPTION_ASSOCIATED_WITH_THE_PROVIDED_IDENTIFIER_DOES_NOT_EXIST =
+      "The exception associated with the provided identifier does not exist";
 
-    public ExpressionServiceImpl(ExpressionRepository expressionRepository) {
-        this.expressionRepository = expressionRepository;
+  private final ExpressionRepository expressionRepository;
+
+  public ExpressionServiceImpl(ExpressionRepository expressionRepository) {
+    this.expressionRepository = expressionRepository;
+  }
+
+  @Override
+  public String processExpression(ExpressionProcessForm expressionProcessForm) {
+    String name =
+        ExpressionStripper.stripField(
+            expressionProcessForm.getName(), ExpressionStripperValues.NAME_FIELD_PREFIX);
+    checkIfExpressionNameExists(name);
+
+    String value =
+        ExpressionStripper.stripField(
+            expressionProcessForm.getValue(), ExpressionStripperValues.VALUE_FIELD_PREFIX);
+
+    Expression e =
+        expressionRepository.save(
+            Expression.builder()
+                .name(name)
+                .expressionValue(value)
+                .identifier(UUID.randomUUID().toString())
+                .build());
+    return e.getIdentifier();
+  }
+
+  @Override
+  public String evaluateExpression(ExpressionEvaluationForm expressionEvaluationForm) {
+    JSONObject input = new JSONObject(expressionEvaluationForm.getJsonRaw());
+    String id = expressionEvaluationForm.getId();
+    Expression expression = findExpressionByIdentifier(id);
+    TreeProvider.provideExpression(expression.getExpressionValue());
+    TreeProvider.fillTreeHelper(input);
+    return TreeProvider.printResult();
+  }
+
+  private void checkIfExpressionNameExists(String name) {
+    Expression exp = expressionRepository.findExpressionByName(name);
+    if (exp != null) {
+      throw new ExpressionWithGivenNameAlreadyExistsException(
+          EXCEPTION_WITH_NAME_ALREADY_EXISTS_IN_DATABASE);
     }
+  }
 
-    @Override
-    public String processExpression(ExpressionProcessForm expressionProcessForm) {
-        String name = ExpressionStripper.stripField(expressionProcessForm.getName(), NAME_FIELD_PREFIX);
-        checkIfExpressionNameExists(name);
-
-        String value = ExpressionStripper.stripField(expressionProcessForm.getValue(), VALUE_FIELD_PREFIX);
-
-        Expression e = expressionRepository.save(
-                Expression.builder().
-                        name(name).
-                        expressionValue(value)
-                        .identifier(UUID.randomUUID().toString())
-                        .build());
-        return e.getIdentifier();
+  private Expression findExpressionByIdentifier(String id) {
+    Expression exp = expressionRepository.findExpressionByIdentifier(id);
+    if (exp == null) {
+      throw new ExpressionWithIdDoesNotExistException(
+          EXCEPTION_ASSOCIATED_WITH_THE_PROVIDED_IDENTIFIER_DOES_NOT_EXIST);
     }
-
-    @Override
-    public String evaluateExpression(ExpressionEvaluationForm expressionEvaluationForm) {
-        JSONObject input = new JSONObject(expressionEvaluationForm.getJsonRaw());
-        String id = expressionEvaluationForm.getId();
-        Expression expression = findExpressionByIdentifier(id);
-        TreeProvider.provideExpression(expression.getExpressionValue());
-        TreeProvider.fillTreeHelper(input);
-        String result = TreeProvider.printResult();
-        return result;
-    }
-
-    private void checkIfExpressionNameExists(String name) {
-        Expression exp = expressionRepository.nameExists(name);
-        if (exp != null) {
-            throw new ExpressionWithGivenNameAlreadyExistsException("Exception with given name already exists in database");
-        }
-    }
-
-    private Expression findExpressionByIdentifier(String id) {
-        Expression exp = expressionRepository.findExpression(id);
-        if (exp == null) {
-            throw new ExpressionWithIdDoesNotExistException("Exception with given id does not exist");
-        }
-        return exp;
-    }
+    return exp;
+  }
 }

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExpressionEvaluationForm {
-    String id;
-    String jsonRaw;
+  String id;
+  String jsonRaw;
 }

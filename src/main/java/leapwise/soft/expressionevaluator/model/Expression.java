@@ -7,19 +7,18 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name="expression")
+@Table(name = "expression")
 public class Expression {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String identifier;
-    private String name;
-    private String expressionValue;
+  private String identifier;
+  private String name;
+  private String expressionValue;
 }

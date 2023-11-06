@@ -11,10 +11,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ExpressionNameFieldValidator.class)
 public @interface ValidExpressionForm {
-    String name() default "";
-    String value() default "";
+  String name() default "";
 
-    String message() default "Invalid ExpressionForm";
-    Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};
+  String value() default "";
+
+  String message() default "Invalid ExpressionForm";
+
+  Class<?>[] groups() default {};
+
+  Class<? extends Payload>[] payload() default {};
 }

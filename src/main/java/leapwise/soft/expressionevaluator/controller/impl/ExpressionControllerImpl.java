@@ -13,21 +13,23 @@ import javax.websocket.server.PathParam;
 @RestController
 public class ExpressionControllerImpl implements ExpressionController {
 
-    private final ExpressionServiceImpl expressionServiceImpl;
+  private final ExpressionServiceImpl expressionServiceImpl;
 
-    public ExpressionControllerImpl(ExpressionServiceImpl expressionServiceImpl) {
-        this.expressionServiceImpl = expressionServiceImpl;
-    }
+  public ExpressionControllerImpl(ExpressionServiceImpl expressionServiceImpl) {
+    this.expressionServiceImpl = expressionServiceImpl;
+  }
 
-    @Override
-    @PostMapping("/expression")
-    public String processExpression(@Valid @RequestBody ExpressionProcessForm expressionProcessForm) {
-        return expressionServiceImpl.processExpression(expressionProcessForm);
-    }
+  @Override
+  @PostMapping("/expression")
+  public String processExpression(@Valid @RequestBody ExpressionProcessForm expressionProcessForm) {
+    return expressionServiceImpl.processExpression(expressionProcessForm);
+  }
 
-    @Override
-    @PostMapping("/evaluate")
-    public String evaluateExpression(@PathParam(value = "id") String id, @RequestBody String jsonRaw) {
-        return expressionServiceImpl.evaluateExpression(ExpressionEvaluationForm.builder().id(id).jsonRaw(jsonRaw).build());
-    }
+  @Override
+  @PostMapping("/evaluate")
+  public String evaluateExpression(
+      @PathParam(value = "id") String id, @RequestBody String jsonRaw) {
+    return expressionServiceImpl.evaluateExpression(
+        ExpressionEvaluationForm.builder().id(id).jsonRaw(jsonRaw).build());
+  }
 }

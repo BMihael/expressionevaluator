@@ -4,7 +4,7 @@ import leapwise.soft.expressionevaluator.model.form.ExpressionEvaluationForm;
 import leapwise.soft.expressionevaluator.model.form.ExpressionProcessForm;
 
 public interface ExpressionService {
-    String processExpression(ExpressionProcessForm expressionProcessForm);
+  String processExpression(ExpressionProcessForm expressionProcessForm);
 
-    String evaluateExpression(ExpressionEvaluationForm expressionEvaluationForm);
+  String evaluateExpression(ExpressionEvaluationForm expressionEvaluationForm);
 }

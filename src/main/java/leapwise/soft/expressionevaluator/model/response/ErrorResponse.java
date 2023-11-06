@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ErrorResponse {
-    private String message;
-    private long timestamp;
+  private String message;
+  private long timestamp;
 }
