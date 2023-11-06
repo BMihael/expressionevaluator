@@ -49,7 +49,7 @@ public class Stack<T> {
   private void ensureCapacity() {
     if (size == stackArray.length) {
       int newCapacity = stackArray.length * 2;
-      Object[] newArray = new Object[newCapacity];
+      T[] newArray = (T[])new Object[newCapacity];
       System.arraycopy(stackArray, 0, newArray, 0, size);
       stackArray =  newArray;
     }

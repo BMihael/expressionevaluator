@@ -148,7 +148,7 @@ public class Tree {
   }
 
   public static Object maloRekurzije(VariableStringNode node, JSONObject json) {
-    Object a = null;
+    Object a;
 
     if (node.getChild() == null) {
       try {

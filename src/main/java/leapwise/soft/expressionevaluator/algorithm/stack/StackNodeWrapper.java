@@ -7,7 +7,7 @@ public class StackNodeWrapper {
   public static int level;
 
   Node node;
-  int index;
+  final int index;
 
   public StackNodeWrapper(Node node, int index) {
     this.node = node;
@@ -26,10 +26,6 @@ public class StackNodeWrapper {
 
   public Node getNode() {
     return this.node;
-  }
-
-  public void setIndex(int index) {
-    this.index = index;
   }
 
   public int getIndex() {

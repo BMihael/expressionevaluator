@@ -34,39 +34,30 @@ public class StackHelper {
     StackNodeWrapper stackNodeWrapperWinner = list.get(0);
     Node nodeWinner = stackNodeWrapperWinner.getNode();
 
-    for (Object item : list) {
-      Node innerNode = ((StackNodeWrapper) item).getNode();
-      if (innerNode.getLevel() == nodeWinner.getLevel()) {
-        if (EvaluationHelper.hasHigherPresedance(
-            (ExpressionNode) innerNode, (ExpressionNode) nodeWinner)) {
-          nodeWinner = innerNode;
-          node22 = (StackNodeWrapper) item;
-        }
-      }
-      if (innerNode.getLevel() < nodeWinner.getLevel()) {
-        nodeWinner = ((StackNodeWrapper) item).getNode();
-        node22 = (StackNodeWrapper) item;
+    for (StackNodeWrapper item : list) {
+      Node innerNode = item.getNode();
+
+      if (innerNode.getLevel() == nodeWinner.getLevel()
+          && EvaluationHelper.hasHigherPresedance(
+              (ExpressionNode) innerNode, (ExpressionNode) nodeWinner)) {
+        nodeWinner = innerNode;
+        stackNodeWrapperWinner = item;
+      } else if (innerNode.getLevel() < nodeWinner.getLevel()) {
+        nodeWinner = item.getNode();
+        stackNodeWrapperWinner = item;
       }
     }
     return stackNodeWrapperWinner.getIndex();
   }
 
   public static void generateStackBaseOnExpression(String expression) {
-    StackNodeWrapper stackNodeWrapper = null;
+    StackNodeWrapper stackNodeWrapper;
     for (int i = 0; i < expression.length(); i++) {
-      Node node = null;
-
+      Node node;
       char c = expression.charAt(i);
 
       // Gate keeper evaluation
-
-      if (c != '('
-          && c != ')'
-          && c != '='
-          && c != 'o'
-          && c != 'O'
-          && c != '&'
-          && c != '!' /* && c!= '|'*/) {
+      if (c != '(' && c != ')' && c != '=' && c != 'o' && c != 'O' && c != '&' && c != '!') {
         continue;
       }
 
@@ -82,14 +73,14 @@ public class StackHelper {
         continue;
       }
       if (c == '=') {
-        StackNodeWrapper stackNodeWrapper1 = null;
+
         while (!stack.isEmpty()
             && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
                 != NodeType.EXPRESSION_NODE) {
-          stackNodeWrapper1 = (StackNodeWrapper) stack.pop();
+          stack.pop();
         }
         node = new EqualsExpressionOperator("==", NodeType.EXPRESSION_NODE);
-        node.setLevel(stackNodeWrapper.level);
+        node.setLevel(StackNodeWrapper.level);
         stackNodeWrapper = new StackNodeWrapper(node, i);
         stack.push(stackNodeWrapper);
         i = i + 1;
@@ -101,14 +92,14 @@ public class StackHelper {
           i = i + 1;
           continue;
         }
-        StackNodeWrapper stackNodeWrapper1 = null;
+
         while (!stack.isEmpty()
             && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
                 != NodeType.EXPRESSION_NODE) {
-          stackNodeWrapper1 = (StackNodeWrapper) stack.pop();
+          stack.pop();
         }
         node = new OrExpressionNode("or", NodeType.EXPRESSION_NODE);
-        node.setLevel(stackNodeWrapper.level);
+        node.setLevel(StackNodeWrapper.level);
         stackNodeWrapper = new StackNodeWrapper(node, i);
         stack.push(stackNodeWrapper);
         i = i + 1;
@@ -120,14 +111,13 @@ public class StackHelper {
           i = i + 1;
           continue;
         }
-        StackNodeWrapper stackNodeWrapper1 = null;
         while (!stack.isEmpty()
             && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
                 != NodeType.EXPRESSION_NODE) {
-          stackNodeWrapper1 = (StackNodeWrapper) stack.pop();
+          stack.pop();
         }
         node = new LogicalAndExpressionNode("&&", NodeType.EXPRESSION_NODE);
-        node.setLevel(stackNodeWrapper.level);
+        node.setLevel(StackNodeWrapper.level);
         stackNodeWrapper = new StackNodeWrapper(node, i);
         stack.push(stackNodeWrapper);
         i = i + 1;
@@ -146,11 +136,10 @@ public class StackHelper {
           stack.pop();
         }
         node = new NotEqualsExpressionNode("!=", NodeType.EXPRESSION_NODE);
-        node.setLevel(stackNodeWrapper.level);
+        node.setLevel(StackNodeWrapper.level);
         stackNodeWrapper = new StackNodeWrapper(node, i);
         stack.push(stackNodeWrapper);
         i = i + 1;
-        continue;
       }
     }
   }
