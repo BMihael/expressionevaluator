@@ -8,12 +8,10 @@ import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.*;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.nothingnode.NullNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.impl.CleanStringNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.impl.VariableStringNode;
-import leapwise.soft.expressionevaluator.exception.algorithm.FieldDoesNotExistInJSONException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static leapwise.soft.expressionevaluator.algorithm.helper.NumericStringCheckerImpl.checkIfNumericReturnBoolean;
-import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.FIELD_DOES_NOT_EXISTS_IN_JSON;
 
 public class Tree {
   public Node root;
@@ -157,9 +155,7 @@ public class Tree {
     try {
       item = json.get(node.getNodeValue());
     } catch (JSONException ex) {
-      // ovdje returnati null;
-      throw new FieldDoesNotExistInJSONException(
-          FIELD_DOES_NOT_EXISTS_IN_JSON, node.getPath());
+      return "null";
     }
 
     if (node.getChild() == null) {

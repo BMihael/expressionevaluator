@@ -1,7 +1,6 @@
 package leapwise.soft.expressionevaluator.algorithm.tree;
 
 import leapwise.soft.expressionevaluator.ExpressionResult;
-import leapwise.soft.expressionevaluator.exception.algorithm.FieldDoesNotExistInJSONException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.EmptyExpressionException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NonComparableValuesException;
@@ -25,7 +24,7 @@ public class UserDefinedTest {
   private static final String expressionWithoutParentasis = "10>5";
   private static final String nonComparableValues = "\"JOHN\" == 2";
 
-  private static final String field_firstName_DoesNotExistInJSONDataset =
+  private static final String field_bothOperands_DoesNotExistInJSONDataset =
       "(customer.firstName == customer.address.city)";
 
   private static final String field_addressCity_DoesNotExistInJSONDataset =
@@ -82,19 +81,9 @@ public class UserDefinedTest {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("customer", jsonObjectInner);
 
-    FieldDoesNotExistInJSONException exception =
-        assertThrows(
-            FieldDoesNotExistInJSONException.class,
-            () -> {
-              TreeProvider.provideExpression(field_firstName_DoesNotExistInJSONDataset);
-              TreeProvider.fillTreeHelper(jsonObject);
-            });
-
-    assertTrue(
-        exception
-            .getMessage()
-            .contains(
-                "The specified field, 'customer.firstName' is not found within the JSON dataset"));
+    TreeProvider.provideExpression(field_bothOperands_DoesNotExistInJSONDataset);
+    TreeProvider.fillTreeHelper(jsonObject);
+    assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
   }
 
   @Test
@@ -108,19 +97,9 @@ public class UserDefinedTest {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("customer", jsonObjectInner);
 
-    FieldDoesNotExistInJSONException exception =
-        assertThrows(
-            FieldDoesNotExistInJSONException.class,
-            () -> {
-              TreeProvider.provideExpression(field_addressCity_DoesNotExistInJSONDataset);
-              TreeProvider.fillTreeHelper(jsonObject);
-            });
-
-    assertTrue(
-        exception
-            .getMessage()
-            .contains(
-                "The specified field, 'customer.address.city' is not found within the JSON dataset"));
+    TreeProvider.provideExpression(field_addressCity_DoesNotExistInJSONDataset);
+    TreeProvider.fillTreeHelper(jsonObject);
+    assertEquals(ExpressionResult.FALSE.toString(), TreeProvider.printResult());
   }
 
   @Test
