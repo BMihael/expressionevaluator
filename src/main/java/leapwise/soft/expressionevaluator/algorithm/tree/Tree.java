@@ -1,5 +1,6 @@
 package leapwise.soft.expressionevaluator.algorithm.tree;
 
+import leapwise.soft.expressionevaluator.algorithm.helper.NumericStringCheckerImpl;
 import leapwise.soft.expressionevaluator.algorithm.stack.StackHelper;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.*;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.ExpressionNode;
@@ -26,13 +27,19 @@ public class Tree {
 
     private Node addRecursive(Node current, String value) {
         if (!(value.contains("&&") || value.contains("==") || value.contains("OR") || value.contains("!=") || value.contains(">") || value.contains("<"))) {
+            if(value.equals("")){
+                current = new CleanStringNode(value, checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
+                return current;
+            }
             if(value.equals("null")){
                 current = new NullNode(value, NodeType.NULL_NODE);
                 return current;
             }
-            if(value.contains(".")){
-                current = new VariableStringNode(value, NodeType.VARIABLE_STRING_NODE);
-                return current;
+            if(value.contains(".") || !(value.contains("\""))){
+                if(!(NumericStringCheckerImpl.checkIfNumericReturnBoolean(value))){
+                    current = new VariableStringNode(value, NodeType.VARIABLE_STRING_NODE);
+                    return current;
+                }
             }
 
             current = new CleanStringNode(value, checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
@@ -237,7 +244,6 @@ public class Tree {
                 node.setValue(hh);
                 ((VariableStringNode) node).setChild(null);
                 ((VariableStringNode) node).setType(odrediTipNoda(hh));
-                System.out.println(node.getNodeValue());
             }
         }
     }
