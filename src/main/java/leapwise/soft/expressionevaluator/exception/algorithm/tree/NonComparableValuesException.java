@@ -5,7 +5,7 @@ public class NonComparableValuesException extends RuntimeException {
     super(message);
   }
 
-  public NonComparableValuesException(String message, String... arr) {
-    super(String.format(message, arr[0], arr[1]));
+  public NonComparableValuesException(String message, String... args) {
+    super(String.format(message, args[0], args[1]));
   }
 }

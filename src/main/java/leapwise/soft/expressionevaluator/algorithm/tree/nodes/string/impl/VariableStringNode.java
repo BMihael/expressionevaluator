@@ -5,6 +5,7 @@ import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.StringNode;
 
 public class VariableStringNode extends StringNode {
   private VariableStringNode child;
+  private String path;
 
   public VariableStringNode(String value, NodeType type) {
     super(value.substring(0, value.indexOf(".") == -1 ? value.length() : value.indexOf(".")), type);
@@ -19,6 +20,7 @@ public class VariableStringNode extends StringNode {
       this.child = null;
       return;
     }
+
     this.child = getByRecursion(value);
   }
 
@@ -31,5 +33,13 @@ public class VariableStringNode extends StringNode {
 
   public VariableStringNode getChild() {
     return child;
+  }
+
+  public void setPath(String value){
+     this.path = value;
+  }
+
+  public String getPath(){
+    return this.path;
   }
 }
