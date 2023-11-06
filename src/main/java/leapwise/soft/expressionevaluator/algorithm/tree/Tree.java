@@ -159,7 +159,7 @@ public class Tree {
     } catch (JSONException ex) {
       // ovdje returnati null;
       throw new FieldDoesNotExistInJSONException(
-          FIELD_DOES_NOT_EXISTS_IN_JSON, node.getPath(), "a");
+          FIELD_DOES_NOT_EXISTS_IN_JSON, node.getPath());
     }
 
     if (node.getChild() == null) {
