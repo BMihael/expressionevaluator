@@ -7,4 +7,6 @@ public interface AlgorithmExceptionMessage {
   String HIGHER_OPERATOR_PRECEDENCE_FOUND =
       "An operator with higher precedence has been encountered";
   String NON_COMPARABLE_VALUES = "Comparing values %s and %s is not feasible";
+  String FIELD_DOES_NOT_EXISTS_IN_JSON =
+      "The specified field, '%s' is not found within the JSON dataset";
 }

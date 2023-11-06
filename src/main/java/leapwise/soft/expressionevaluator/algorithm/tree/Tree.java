@@ -8,10 +8,12 @@ import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.*;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.nothingnode.NullNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.impl.CleanStringNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.impl.VariableStringNode;
+import leapwise.soft.expressionevaluator.exception.algorithm.FieldDoesNotExistInJSONException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static leapwise.soft.expressionevaluator.algorithm.helper.NumericStringCheckerImpl.checkIfNumericReturnBoolean;
+import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.FIELD_DOES_NOT_EXISTS_IN_JSON;
 
 public class Tree {
   public Node root;
@@ -140,19 +142,25 @@ public class Tree {
 
     if (node.getNodeType() == NodeType.VARIABLE_STRING_NODE) {
       String recursivelyFoundValue =
-          maloRekurzije((VariableStringNode) node, jsonObject).toString();
+          maloRekurzije("", (VariableStringNode) node, jsonObject).toString();
       node.setValue(recursivelyFoundValue);
       node.setType(determineNodeType(recursivelyFoundValue));
       ((VariableStringNode) node).setChild(null);
     }
   }
 
-  public static Object maloRekurzije(VariableStringNode node, JSONObject json) {
+  public static Object maloRekurzije(String path, VariableStringNode node, JSONObject json) {
+    path = path + node.getNodeValue();
     Object a;
+    ((VariableStringNode) node).setPath(path);
+    Object item;
+    try {
+      item = json.get(node.getNodeValue());
+    }catch(JSONException ex){
+      throw new FieldDoesNotExistInJSONException(FIELD_DOES_NOT_EXISTS_IN_JSON, node.getPath());
+    }
 
     if (node.getChild() == null) {
-      try {
-        Object item = json.get(node.getNodeValue());
         if (item instanceof String) {
           a = item;
           a = "\"" + a + "\"";
@@ -164,11 +172,20 @@ public class Tree {
           return "null";
         }
         return "X";
-      } catch (JSONException ex) {
-        return "null";
-      }
     }
-    return maloRekurzije(node.getChild(), (JSONObject) json.get(node.getNodeValue()));
+    path += "." ;
+    return maloRekurzije(path, node.getChild(), (JSONObject) json.get(node.getNodeValue()));
+  }
+
+  private static JSONObject checkIfChildInJSONExists(Node node, Object json) {
+    JSONObject jsonObject;
+    try {
+      jsonObject = (JSONObject) ( (JSONObject) json).get(node.getNodeValue());
+      return jsonObject;
+    } catch (JSONException ex) {
+      throw new FieldDoesNotExistInJSONException(
+              FIELD_DOES_NOT_EXISTS_IN_JSON, node.getNodeValue());
+    }
   }
 
   public static NodeType determineNodeType(String value) {
