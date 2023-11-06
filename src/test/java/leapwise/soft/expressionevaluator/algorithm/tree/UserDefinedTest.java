@@ -1,21 +1,64 @@
 package leapwise.soft.expressionevaluator.algorithm.tree;
 
 import leapwise.soft.expressionevaluator.ExpressionResult;
+import leapwise.soft.expressionevaluator.exception.algorithm.tree.EmptyExpressionException;
+import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
+import leapwise.soft.expressionevaluator.exception.algorithm.tree.NonComparableValuesException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserDefinedTest {
 
   private static final String expression =
       "(customer.firstName == \"JOHN\" && customer.salary < 100) OR (customer.address != null && customer.address.city == \"Washington\")";
-
   private static final String expressionPopulated =
       "(\"JOHN\" == \"JOHN\" && 99 < 100) OR (X != null && \"Chicago\" == \"Washington\")";
+
+  private static final String emptyExpression = "";
+  private static final String noLogicalExpression = "((";
+  private static final String expressionWithoutParentasis = "10>5";
+  private static final String nonComparableValues = "\"JOHN\" == 2";
 
   @Test
   public void expression() {
     TreeProvider.provideExpression(expressionPopulated);
     assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
+  }
+
+  @Test
+  public void emptyExpressionException() {
+    assertThrows(
+        EmptyExpressionException.class,
+        () -> {
+          TreeProvider.provideExpression(emptyExpression);
+          TreeProvider.printResult();
+        });
+  }
+
+  @Test
+  public void noLogicalExpressionException() {
+    assertThrows(
+        NoLogicalExpressionException.class,
+        () -> {
+          TreeProvider.provideExpression(noLogicalExpression);
+          TreeProvider.printResult();
+        });
+  }
+
+  @Test
+  public void withoutParentasis() {
+    TreeProvider.provideExpression(expressionWithoutParentasis);
+    assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
+  }
+
+  @Test
+  public void nonComparableValues() {
+    assertThrows(
+        NonComparableValuesException.class,
+        () -> {
+          TreeProvider.provideExpression(nonComparableValues);
+          TreeProvider.printResult();
+        });
   }
 }
