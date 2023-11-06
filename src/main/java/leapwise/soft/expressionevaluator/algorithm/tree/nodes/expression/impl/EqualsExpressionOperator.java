@@ -14,6 +14,10 @@ public class EqualsExpressionOperator extends ExpressionNode {
     super(value, type, 700);
   }
 
+  public EqualsExpressionOperator(String value, NodeType type, int presedence) {
+    super(value, type, presedence);
+  }
+
   public static boolean areNumericEquals(Node n1, Node n2) {
     Double a = NumericStringCheckerImpl.checkIfNumeric(n1.getNodeValue());
     Double b = NumericStringCheckerImpl.checkIfNumeric(n2.getNodeValue());
@@ -34,14 +38,15 @@ public class EqualsExpressionOperator extends ExpressionNode {
         && n2.getNodeType() == NodeType.STRING_NODE
         && !(n1.getNodeType() == NodeType.NON_NULL_NODE
             || n1.getNodeType() == NodeType.NULL_NODE)) {
-      throw new RuntimeException(
-          "Operand " + n1.getNodeValue() + " nije usporediv s vrijednosti " + n2.getNodeValue());
+      throw new NonComparableValuesException(
+          NON_COMPARABLE_VALUES, n1.getNodeValue(), n2.getNodeValue());
     }
     if (n2.getNodeType() == NodeType.NUMERIC_NODE
         && n1.getNodeType() == NodeType.STRING_NODE
         && !(n2.getNodeType() == NodeType.NON_NULL_NODE
             || n2.getNodeType() == NodeType.NULL_NODE)) {
-      throw new NonComparableValuesException(NON_COMPARABLE_VALUES, n2.getNodeValue(), n1.getNodeValue());
+      throw new NonComparableValuesException(
+          NON_COMPARABLE_VALUES, n2.getNodeValue(), n1.getNodeValue());
     }
     if (n1.getNodeType() == NodeType.NULL_NODE && n2.getNodeType() == NodeType.STRING_NODE) {
       return n2.getNodeValue() == null;

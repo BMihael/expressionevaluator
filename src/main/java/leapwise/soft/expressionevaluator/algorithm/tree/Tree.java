@@ -156,36 +156,27 @@ public class Tree {
     Object item;
     try {
       item = json.get(node.getNodeValue());
-    }catch(JSONException ex){
-      throw new FieldDoesNotExistInJSONException(FIELD_DOES_NOT_EXISTS_IN_JSON, node.getPath());
+    } catch (JSONException ex) {
+      // ovdje returnati null;
+      throw new FieldDoesNotExistInJSONException(
+          FIELD_DOES_NOT_EXISTS_IN_JSON, node.getPath(), "a");
     }
 
     if (node.getChild() == null) {
-        if (item instanceof String) {
-          a = item;
-          a = "\"" + a + "\"";
-          return a;
-        } else if (item instanceof Number) {
-          a = item;
-          return a;
-        } else if (item == JSONObject.NULL) {
-          return "null";
-        }
-        return "X";
+      if (item instanceof String) {
+        a = item;
+        a = "\"" + a + "\"";
+        return a;
+      } else if (item instanceof Number) {
+        a = item;
+        return a;
+      } else if (item == JSONObject.NULL) {
+        return "null";
+      }
+      return "X";
     }
-    path += "." ;
+    path += ".";
     return maloRekurzije(path, node.getChild(), (JSONObject) json.get(node.getNodeValue()));
-  }
-
-  private static JSONObject checkIfChildInJSONExists(Node node, Object json) {
-    JSONObject jsonObject;
-    try {
-      jsonObject = (JSONObject) ( (JSONObject) json).get(node.getNodeValue());
-      return jsonObject;
-    } catch (JSONException ex) {
-      throw new FieldDoesNotExistInJSONException(
-              FIELD_DOES_NOT_EXISTS_IN_JSON, node.getNodeValue());
-    }
   }
 
   public static NodeType determineNodeType(String value) {
