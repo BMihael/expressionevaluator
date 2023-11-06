@@ -1,1 +1,16 @@
 name: Test
+
+on:
+  push:
+    branches:
+      - 'master'
+    pull_request:
+      - 'master'
+
+
+jobs:
+  runTest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello test
+      - run: echo "Hello test"
