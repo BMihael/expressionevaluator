@@ -11,7 +11,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-  public static final String NO_RESQUEST_RESOURCE_FOUND = "The requested resource was not found: ";
+  public static final String NO_REQUEST_RESOURCE_FOUND = "The requested resource was not found: ";
 
   @ExceptionHandler
   public ResponseEntity<Object> handleNameNotValidException(NameNotValidException exception) {
@@ -38,7 +38,7 @@ public class RestExceptionHandler {
     return ResponseHandler.generateErrorResponse(
         HttpStatus.NOT_FOUND,
         ErrorResponse.builder()
-            .message(NO_RESQUEST_RESOURCE_FOUND + exception.getRequestURL())
+            .message(NO_REQUEST_RESOURCE_FOUND + exception.getRequestURL())
             .timestamp(System.currentTimeMillis())
             .build());
   }

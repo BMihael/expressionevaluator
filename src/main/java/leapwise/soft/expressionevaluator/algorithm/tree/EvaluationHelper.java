@@ -3,9 +3,9 @@ package leapwise.soft.expressionevaluator.algorithm.tree;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.*;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.bool.BooleanExpressionNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.ExpressionNode;
-import leapwise.soft.expressionevaluator.exception.algorithm.stack.HigherPresedanceOperatorFound;
+import leapwise.soft.expressionevaluator.exception.algorithm.stack.HigherPrecedenceOperatorFound;
 
-import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.HIGHER_OPERATOR_PRESEDANCE_FOUND;
+import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.HIGHER_OPERATOR_PRECEDENCE_FOUND;
 
 public class EvaluationHelper {
 
@@ -34,7 +34,7 @@ public class EvaluationHelper {
 
   public static boolean hasHigherPresedance(ExpressionNode node1, ExpressionNode node2) {
     if (node1.getPresedance() == 0 || node2.getPresedance() == 0) {
-      throw new HigherPresedanceOperatorFound(HIGHER_OPERATOR_PRESEDANCE_FOUND);
+      throw new HigherPrecedenceOperatorFound(HIGHER_OPERATOR_PRECEDENCE_FOUND);
     }
     return node1.getPresedance() > node2.getPresedance();
   }

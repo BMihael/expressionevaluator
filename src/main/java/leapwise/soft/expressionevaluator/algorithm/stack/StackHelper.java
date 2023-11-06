@@ -8,72 +8,56 @@ import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.Lo
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.NotEqualsExpressionNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.OrExpressionNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.impl.CleanStringNode;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StackHelper {
-  private static Stack stack = null;
+  private static Stack<StackNodeWrapper> stack = null;
 
   public static void initStack() {
-    stack = new Stack();
+    stack = new Stack<>();
   }
 
   public static int getIndexOfParentFromExpression(String expression) {
     initStack();
     generateStackBaseOnExpression(expression);
 
-    List<Object> a = Arrays.stream(stack.getStackItems()).collect(Collectors.toList());
+    List<StackNodeWrapper> stackItems =
+        stack.getStackArray().stream().filter(Objects::nonNull).collect(Collectors.toList());
 
-    List<Object> b = a.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
-
-    List<Object> list =
-        b.parallelStream()
-            .filter(
-                item -> {
-                  return (((StackNodeWrapper) item).getNode().getNodeType()
-                      != NodeType.STRING_NODE);
-                })
+    List<StackNodeWrapper> list =
+        stackItems.stream()
+            .filter(item -> item.getNode().getNodeType() != NodeType.STRING_NODE)
             .collect(Collectors.toList());
 
-    StackNodeWrapper node22 = (StackNodeWrapper) list.get(0);
-    Node nodeWinner = node22.getNode();
+    StackNodeWrapper stackNodeWrapperWinner = list.get(0);
+    Node nodeWinner = stackNodeWrapperWinner.getNode();
 
-    for (Object item : list) {
-      Node innerNode = ((StackNodeWrapper) item).getNode();
-      if (innerNode.getLevel() == nodeWinner.getLevel()) {
-        if (EvaluationHelper.hasHigherPresedance(
-            (ExpressionNode) innerNode, (ExpressionNode) nodeWinner)) {
-          nodeWinner = innerNode;
-          node22 = (StackNodeWrapper) item;
-        }
-      }
-      if (innerNode.getLevel() < nodeWinner.getLevel()) {
-        nodeWinner = ((StackNodeWrapper) item).getNode();
-        node22 = (StackNodeWrapper) item;
+    for (StackNodeWrapper item : list) {
+      Node innerNode = item.getNode();
+
+      if (innerNode.getLevel() == nodeWinner.getLevel()
+          && EvaluationHelper.hasHigherPresedance(
+              (ExpressionNode) innerNode, (ExpressionNode) nodeWinner)) {
+        nodeWinner = innerNode;
+        stackNodeWrapperWinner = item;
+      } else if (innerNode.getLevel() < nodeWinner.getLevel()) {
+        nodeWinner = item.getNode();
+        stackNodeWrapperWinner = item;
       }
     }
-    return node22.getIndex();
+    return stackNodeWrapperWinner.getIndex();
   }
 
   public static void generateStackBaseOnExpression(String expression) {
-    StackNodeWrapper stackNodeWrapper = null;
+    StackNodeWrapper stackNodeWrapper;
     for (int i = 0; i < expression.length(); i++) {
-      Node node = null;
-
+      Node node;
       char c = expression.charAt(i);
 
       // Gate keeper evaluation
-
-      if (c != '('
-          && c != ')'
-          && c != '='
-          && c != 'o'
-          && c != 'O'
-          && c != '&'
-          && c != '!' /* && c!= '|'*/) {
+      if (c != '(' && c != ')' && c != '=' && c != 'o' && c != 'O' && c != '&' && c != '!') {
         continue;
       }
 
@@ -89,14 +73,14 @@ public class StackHelper {
         continue;
       }
       if (c == '=') {
-        StackNodeWrapper stackNodeWrapper1 = null;
+
         while (!stack.isEmpty()
             && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
                 != NodeType.EXPRESSION_NODE) {
-          stackNodeWrapper1 = (StackNodeWrapper) stack.pop();
+          stack.pop();
         }
         node = new EqualsExpressionOperator("==", NodeType.EXPRESSION_NODE);
-        node.setLevel(stackNodeWrapper.level);
+        node.setLevel(StackNodeWrapper.level);
         stackNodeWrapper = new StackNodeWrapper(node, i);
         stack.push(stackNodeWrapper);
         i = i + 1;
@@ -108,14 +92,14 @@ public class StackHelper {
           i = i + 1;
           continue;
         }
-        StackNodeWrapper stackNodeWrapper1 = null;
+
         while (!stack.isEmpty()
             && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
                 != NodeType.EXPRESSION_NODE) {
-          stackNodeWrapper1 = (StackNodeWrapper) stack.pop();
+          stack.pop();
         }
         node = new OrExpressionNode("or", NodeType.EXPRESSION_NODE);
-        node.setLevel(stackNodeWrapper.level);
+        node.setLevel(StackNodeWrapper.level);
         stackNodeWrapper = new StackNodeWrapper(node, i);
         stack.push(stackNodeWrapper);
         i = i + 1;
@@ -127,14 +111,13 @@ public class StackHelper {
           i = i + 1;
           continue;
         }
-        StackNodeWrapper stackNodeWrapper1 = null;
         while (!stack.isEmpty()
             && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
                 != NodeType.EXPRESSION_NODE) {
-          stackNodeWrapper1 = (StackNodeWrapper) stack.pop();
+          stack.pop();
         }
         node = new LogicalAndExpressionNode("&&", NodeType.EXPRESSION_NODE);
-        node.setLevel(stackNodeWrapper.level);
+        node.setLevel(StackNodeWrapper.level);
         stackNodeWrapper = new StackNodeWrapper(node, i);
         stack.push(stackNodeWrapper);
         i = i + 1;
@@ -153,11 +136,10 @@ public class StackHelper {
           stack.pop();
         }
         node = new NotEqualsExpressionNode("!=", NodeType.EXPRESSION_NODE);
-        node.setLevel(stackNodeWrapper.level);
+        node.setLevel(StackNodeWrapper.level);
         stackNodeWrapper = new StackNodeWrapper(node, i);
         stack.push(stackNodeWrapper);
         i = i + 1;
-        continue;
       }
     }
   }
