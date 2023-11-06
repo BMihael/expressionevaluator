@@ -7,10 +7,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExpressionRepository extends JpaRepository<Expression, Long> {
-    @Query("SELECT e FROM Expression e WHERE e.name = ?1")
-    Expression nameExists(String name);
+  @Query("SELECT e FROM Expression e WHERE e.name = ?1")
+  Expression findExpressionByName(String name);
 
-    @Query("SELECT e FROM Expression e WHERE e.identifier = ?1")
-    Expression findExpression(String name);
-
+  @Query("SELECT e FROM Expression e WHERE e.identifier = ?1")
+  Expression findExpressionByIdentifier(String name);
 }

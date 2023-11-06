@@ -11,18 +11,12 @@ import java.util.Map;
 @Component
 public class ResponseHandler {
 
-    public static ResponseEntity<Object> generateErrorResponse(HttpStatus status, ErrorResponse errorResponse) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", status.value());
-        map.put("error", errorResponse);
+  public static ResponseEntity<Object> generateErrorResponse(
+      HttpStatus status, ErrorResponse errorResponse) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("status", status.value());
+    map.put("error", errorResponse);
 
-        return new ResponseEntity<>(map, status);
-    }
-/*
-    public static ResponseEntity<Object> generateResponse(Object data) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", HttpStatus.OK.value());
-        map.put("data", data);
-        return new ResponseEntity<>(map, HttpStatus.OK);
-    }*/
+    return new ResponseEntity<>(map, status);
+  }
 }

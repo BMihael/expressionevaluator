@@ -1,7 +1,8 @@
 package leapwise.soft.expressionevaluator.util;
 
-public class ExpressionStripper {
-    public static String stripField(String field, String toStripWith){
-        return field.replaceFirst(toStripWith, "");
-    }
+public interface ExpressionStripper {
+
+  static String stripField(String value, ExpressionStripperValues toStripWith) {
+    return value.replaceFirst(toStripWith.toString(), "");
+  }
 }
