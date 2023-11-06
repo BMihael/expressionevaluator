@@ -8,38 +8,31 @@ import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.Lo
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.NotEqualsExpressionNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.OrExpressionNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.impl.CleanStringNode;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StackHelper {
-  private static Stack stack = null;
+  private static Stack<StackNodeWrapper> stack = null;
 
   public static void initStack() {
-    stack = new Stack();
+    stack = new Stack<>();
   }
 
   public static int getIndexOfParentFromExpression(String expression) {
     initStack();
     generateStackBaseOnExpression(expression);
 
-    List<Object> a = Arrays.stream(stack.getStackItems()).collect(Collectors.toList());
+    List<StackNodeWrapper> stackItems =
+        stack.getStackArray().stream().filter(Objects::nonNull).collect(Collectors.toList());
 
-    List<Object> b = a.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
-
-    List<Object> list =
-        b.parallelStream()
-            .filter(
-                item -> {
-                  return (((StackNodeWrapper) item).getNode().getNodeType()
-                      != NodeType.STRING_NODE);
-                })
+    List<StackNodeWrapper> list =
+        stackItems.stream()
+            .filter(item -> item.getNode().getNodeType() != NodeType.STRING_NODE)
             .collect(Collectors.toList());
 
-    StackNodeWrapper node22 = (StackNodeWrapper) list.get(0);
-    Node nodeWinner = node22.getNode();
+    StackNodeWrapper stackNodeWrapperWinner = list.get(0);
+    Node nodeWinner = stackNodeWrapperWinner.getNode();
 
     for (Object item : list) {
       Node innerNode = ((StackNodeWrapper) item).getNode();
@@ -55,7 +48,7 @@ public class StackHelper {
         node22 = (StackNodeWrapper) item;
       }
     }
-    return node22.getIndex();
+    return stackNodeWrapperWinner.getIndex();
   }
 
   public static void generateStackBaseOnExpression(String expression) {
