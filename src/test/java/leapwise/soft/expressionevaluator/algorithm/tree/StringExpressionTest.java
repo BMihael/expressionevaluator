@@ -1,6 +1,7 @@
 package leapwise.soft.expressionevaluator.algorithm.tree;
 
 import leapwise.soft.expressionevaluator.ExpressionResult;
+import leapwise.soft.expressionevaluator.exception.algorithm.FieldDoesNotExistInJSONException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -199,9 +200,20 @@ public class StringExpressionTest {
 
   @Test
   public void expression24() throws JSONException {
-    TreeProvider.provideExpression(expression24);
-    TreeProvider.fillTreeHelper(buildJsonObject());
-    assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
+    FieldDoesNotExistInJSONException exception =
+            assertThrows(
+                    FieldDoesNotExistInJSONException.class,
+                    () -> {
+                      TreeProvider.provideExpression(expression24);
+                      TreeProvider.fillTreeHelper(buildJsonObject());
+                    });
+
+    assertTrue(
+            exception
+                    .getMessage()
+                    .contains(
+                            "The specified field, 'customer.notExists' is not found within the JSON dataset"));
+
   }
 
   @Test
@@ -213,9 +225,19 @@ public class StringExpressionTest {
 
   @Test
   public void expression26() throws JSONException {
-    TreeProvider.provideExpression(expression26);
-    TreeProvider.fillTreeHelper(buildJsonObject());
-    assertEquals(ExpressionResult.FALSE.toString(), TreeProvider.printResult());
+    FieldDoesNotExistInJSONException exception =
+            assertThrows(
+                    FieldDoesNotExistInJSONException.class,
+                    () -> {
+                      TreeProvider.provideExpression(expression26);
+                      TreeProvider.fillTreeHelper(buildJsonObject());
+                    });
+
+    assertTrue(
+            exception
+                    .getMessage()
+                    .contains(
+                            "The specified field, 'customer.notExists' is not found within the JSON dataset"));
   }
 
   private JSONObject buildJsonObject() throws JSONException {
