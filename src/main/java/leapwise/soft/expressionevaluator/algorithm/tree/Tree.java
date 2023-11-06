@@ -26,6 +26,10 @@ public class Tree {
   }
 
   private Node addRecursive(Node current, String value) {
+    if (value.equals("null")) {
+      current = new NullNode(value, NodeType.NULL_NODE);
+      return current;
+    }
     if (!(value.contains("&&")
         || value.contains("==")
         || value.contains("OR")
@@ -37,10 +41,6 @@ public class Tree {
             new CleanStringNode(
                 value,
                 checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
-        return current;
-      }
-      if (value.equals("null")) {
-        current = new NullNode(value, NodeType.NULL_NODE);
         return current;
       }
       if (value.contains(".") || !(value.contains("\""))) {
@@ -133,32 +133,6 @@ public class Tree {
 
     if (startIndex != -1) {
       return input.substring(startIndex);
-    }
-
-    throw new RuntimeException("No logical expression found");
-  }
-
-  public static String calculate(String input) {
-    if (input == null || input.isEmpty()) {
-      throw new RuntimeException("Invalid input: Empty expression");
-    }
-
-    int openCount = 0;
-    int closeCount = 0;
-
-    for (int i = 0; i < input.length(); i++) {
-      char c = input.charAt(i);
-
-      if (c == '(') {
-        openCount++;
-      } else if (c == ')') {
-        closeCount++;
-
-        if (openCount > 0 && openCount == closeCount) {
-          // Found the most outer parentheses
-          return input.substring(1, i); // Exclude the outer parentheses
-        }
-      }
     }
 
     throw new RuntimeException("No logical expression found");

@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class StringExpressionTest {
 
-  private static final String expression1 = "\"JOHN\" == \"JOHN\"";
-  private static final String expression2 = "\"JOHN\" == \"NOT_JOHN\"";
+  private static final String expression1 = "(\"JOHN\" == \"JOHN\")";
+  private static final String expression2 = "(\"JOHN\" == \"NOT_JOHN\")";
 
   private static final String expression3 = "(8 < 6 && 4 > 4) or (\"pear\" == \"grape\")";
   private static final String expression4 =

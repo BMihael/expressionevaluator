@@ -20,13 +20,13 @@ public class ExpressionControllerImpl implements ExpressionController {
   }
 
   @Override
-  @PostMapping("/expression")
+  @PostMapping(PATH_PROCESS_EXPRESSION)
   public String processExpression(@Valid @RequestBody ExpressionProcessForm expressionProcessForm) {
     return expressionServiceImpl.processExpression(expressionProcessForm);
   }
 
   @Override
-  @PostMapping("/evaluate")
+  @PostMapping(PATH_EVALUATE_EXPRESSION)
   public String evaluateExpression(
       @PathParam(value = "id") String id, @RequestBody String jsonRaw) {
     return expressionServiceImpl.evaluateExpression(

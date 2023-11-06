@@ -1,10 +1,62 @@
 package leapwise.soft.expressionevaluator.algorithm.stack;
 
-import java.util.Arrays;
+import java.util.EmptyStackException;
 
-/**
- * author: Somewhere on google
- * */
+/** author: Somewhere on google */
+public class Stack {
+
+  private static final int DEFAULT_CAPACITY = 1;
+  public Object[] stackArray;
+  private int size;
+
+  public Stack() {
+    stackArray = new Object[DEFAULT_CAPACITY];
+    size = 0;
+  }
+
+  public boolean isEmpty() {
+    return size == 0;
+  }
+
+  public int size() {
+    return size;
+  }
+
+  public void push(Object data) {
+    ensureCapacity();
+    stackArray[size++] = data;
+  }
+
+  public Object pop() {
+    if (isEmpty()) {
+      throw new EmptyStackException();
+    }
+    Object data = stackArray[--size];
+    stackArray[size] = null;
+    return data;
+  }
+
+  public Object peek() {
+    if (isEmpty()) {
+      throw new EmptyStackException();
+    }
+    return stackArray[size - 1];
+  }
+
+  private void ensureCapacity() {
+    if (size == stackArray.length) {
+      int newCapacity = stackArray.length * 2;
+      Object[] newArray = new Object[newCapacity];
+      System.arraycopy(stackArray, 0, newArray, 0, size);
+      stackArray = newArray;
+    }
+  }
+}
+
+/*
+Old implementation:
+
+
 public class Stack {
 
     private int maxSize;
@@ -58,3 +110,4 @@ public class Stack {
         return "Stack: " + Arrays.toString(stackArray);
     }
 }
+*/
