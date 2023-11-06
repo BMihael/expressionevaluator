@@ -26,15 +26,14 @@ public class TreeProvider {
 
   public static String printResult() {
     checkIfTreeIsGenerated();
-    Node node = tree.printInorder(tree.root);
+    Node node = tree.printTree(tree.root);
     tree = null;
     return node.getNodeValue();
   }
 
-  public static String fillTreeHelper(JSONObject jsonInput) {
+  public static void fillTreeHelper(JSONObject input) {
     checkIfTreeIsGenerated();
-    tree.fillTree(tree.root, jsonInput);
-    return null;
+    tree.fillTree(tree.root, input);
   }
 
   public static String checkValidityOfExpression(String expression) {

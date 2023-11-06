@@ -22,11 +22,10 @@ public class StackHelper {
   }
 
   public static int getIndexOfParentFromExpression(String expression) {
-
     initStack();
     generateStackBaseOnExpression(expression);
 
-    List<Object> a = Arrays.stream(stack.stackArray).collect(Collectors.toList());
+    List<Object> a = Arrays.stream(stack.getStackItems()).collect(Collectors.toList());
 
     List<Object> b = a.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
 
