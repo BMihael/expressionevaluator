@@ -6,7 +6,7 @@ import java.util.EmptyStackException;
 public class Stack {
 
   private static final int DEFAULT_CAPACITY = 1;
-  public Object[] stackArray;
+  private Object[] stackArray;
   private int size;
 
   public Stack() {
@@ -51,6 +51,11 @@ public class Stack {
       stackArray = newArray;
     }
   }
+
+  public Object[] getStackItems(){
+    return this.stackArray;
+  }
+
 }
 
 /*

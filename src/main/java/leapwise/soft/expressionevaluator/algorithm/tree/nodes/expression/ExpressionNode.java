@@ -4,7 +4,7 @@ import leapwise.soft.expressionevaluator.algorithm.tree.nodes.Node;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.NodeType;
 
 public abstract class ExpressionNode extends Node {
-    private int presedance;
+    private final int presedance;
     public ExpressionNode(String item, NodeType type, int presedance){
         super(item, type);
         this.presedance = presedance;
