@@ -1,6 +1,5 @@
 package leapwise.soft.expressionevaluator.exception;
 
-import leapwise.soft.expressionevaluator.exception.algorithm.FieldDoesNotExistInJSONException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NonComparableValuesException;
 import leapwise.soft.expressionevaluator.model.response.ErrorResponse;
 import leapwise.soft.expressionevaluator.util.ResponseHandler;
@@ -59,17 +58,6 @@ public class RestExceptionHandler {
   @ExceptionHandler
   public ResponseEntity<Object> handleExpressionWithGivenNameAlreadyExistsException(
       ExpressionWithGivenNameAlreadyExistsException exception) {
-    return ResponseHandler.generateErrorResponse(
-        HttpStatus.BAD_REQUEST,
-        ErrorResponse.builder()
-            .message(exception.getMessage())
-            .timestamp(System.currentTimeMillis())
-            .build());
-  }
-
-  @ExceptionHandler
-  public ResponseEntity<Object> handleFieldDoesNotExistInJsonDatasetException(
-      FieldDoesNotExistInJSONException exception) {
     return ResponseHandler.generateErrorResponse(
         HttpStatus.BAD_REQUEST,
         ErrorResponse.builder()
