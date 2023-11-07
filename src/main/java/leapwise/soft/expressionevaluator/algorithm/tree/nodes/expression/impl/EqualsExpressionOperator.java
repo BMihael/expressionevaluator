@@ -19,10 +19,11 @@ public class EqualsExpressionOperator extends ExpressionNode {
   }
 
   public static boolean areNumericEquals(Node n1, Node n2) {
-    Double a = NumericStringCheckerImpl.checkIfNumeric(n1.getNodeValue());
-    Double b = NumericStringCheckerImpl.checkIfNumeric(n2.getNodeValue());
-    return a.equals(b);
+    Double num1 = NumericStringCheckerImpl.checkIfNumeric(n1.getNodeValue());
+    Double num2 = NumericStringCheckerImpl.checkIfNumeric(n2.getNodeValue());
+    return num1.equals(num2);
   }
+
   // https://www.google.com/search?q=can+enum+implement+interface&sca_esv=579669660&sxsrf=AM9HkKl0g3GJfXsaUxDR14dFynGO-4x8Kw%3A1699222933826&ei=lRVIZamDMsuMi-gPptqW6As&udm=&oq=can+enum+imple&gs_lp=Egxnd3Mtd2l6LXNlcnAiDmNhbiBlbnVtIGltcGxlKgIIADIIEAAYywEYgAQyCBAAGMsBGIAEMggQABjLARiABDIIEAAYywEYgAQyBhAAGBYYHjIGEAAYFhgeSPpCUABY8D1wAXgAkAEDmAG0CqABpFWqAQ8wLjguNS4zLjQuMS4yLjO4AQPIAQD4AQHCAgUQABiABMICCBAuGMsBGIAEwgIFECEYoAHCAggQIRgWGB4YHcICCBAAGBYYHhgPwgIHECMYigUYJ8ICCxAAGIoFGLEDGIMBwgIREC4YgAQYsQMYgwEYxwEY0QPCAhEQLhiABBixAxiDARjHARivAcICCBAAGIAEGLEDwgIREC4YgwEYrwEYxwEYsQMYgATCAgQQIxgnwgILEAAYgAQYsQMYgwHCAgsQLhiABBixAxiDAcICBRAuGIAE4gMEGAAgQYgGAQ&sclient=gws-wiz-serp
   @Override
   public boolean makeResult(Node n1, Node n2) { // ovo sve pretvoriti u enumeraciju
@@ -86,12 +87,5 @@ public class EqualsExpressionOperator extends ExpressionNode {
           "Operand " + n2.getNodeValue() + " nije usporediv s vrijednosti " + n1.getNodeValue());
     }
     return Boolean.parseBoolean(n1.getNodeValue()) == Boolean.parseBoolean(n2.getNodeValue());
-  }
-
-  public static void operandNijeNull(Node node) {
-    if (!(node.getNodeType() == NodeType.NULL_NODE)) {
-      throw new RuntimeException(
-          "Operand " + node.getNodeValue() + " nije usporediv s null vrijednosti");
-    }
   }
 }

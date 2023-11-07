@@ -1,5 +1,6 @@
 package leapwise.soft.expressionevaluator.algorithm.tree;
 
+import leapwise.soft.expressionevaluator.algorithm.helper.ExpressionValidator;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.Node;
 import leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.EmptyExpressionException;
@@ -19,7 +20,7 @@ public class TreeProvider {
   }
 
   public static void provideExpression(String expression) {
-    checkValidityOfExpression(expression);
+    ExpressionValidator.checkValidityOfExpression(expression);
     generate();
     tree.add(expression);
   }
@@ -34,33 +35,6 @@ public class TreeProvider {
   public static void fillTreeHelper(JSONObject input) {
     checkIfTreeIsGenerated();
     Tree.fillTree(tree.getRoot(), input);
-  }
-
-  public static String checkValidityOfExpression(String expression) {
-    if (expression == null || expression.isEmpty()) {
-      throw new EmptyExpressionException(AlgorithmExceptionMessage.EMPTY_EXPRESSION);
-    }
-
-    int openCount = 0;
-    int closeCount = 0;
-
-    for (int i = 0; i < expression.length(); i++) {
-      char c = expression.charAt(i);
-
-      if (c == '(') {
-        openCount++;
-      } else if (c == ')') {
-        closeCount++;
-
-        if (openCount > 0 && openCount == closeCount) {
-          return expression.substring(1, i);
-        }
-      }
-    }
-    if (openCount == 0 && closeCount == 0) {
-      return expression;
-    }
-    throw new NoLogicalExpressionException(NO_LOGICAL_EXPRESSION);
   }
 
   private static void checkIfTreeIsGenerated() {
