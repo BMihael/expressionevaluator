@@ -1,5 +1,9 @@
 package leapwise.soft.expressionevaluator.exception;
 
+import leapwise.soft.expressionevaluator.exception.algorithm.stack.HigherPrecedenceOperatorFound;
+import leapwise.soft.expressionevaluator.exception.algorithm.tree.EmptyExpressionException;
+import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
+import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoTreeGenerated;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NonComparableValuesException;
 import leapwise.soft.expressionevaluator.model.response.ErrorResponse;
 import leapwise.soft.expressionevaluator.util.ResponseHandler;
@@ -76,4 +80,91 @@ public class RestExceptionHandler {
             .timestamp(System.currentTimeMillis())
             .build());
   }
+
+  @ExceptionHandler
+  public ResponseEntity<Object> handleCriticalException(CriticalException exception) {
+    return ResponseHandler.generateErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ErrorResponse.builder()
+            .message(exception.getMessage())
+            .timestamp(System.currentTimeMillis())
+            .build());
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Object> handleMultipleArgumentsExceptionException(
+      MultipleArgumentsException exception) {
+    return ResponseHandler.generateErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ErrorResponse.builder()
+            .message(exception.getMessage())
+            .timestamp(System.currentTimeMillis())
+            .build());
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Object> handleNonNumericStringExceptionException(
+      NonNumericStringException exception) {
+    return ResponseHandler.generateErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ErrorResponse.builder()
+            .message(exception.getMessage())
+            .timestamp(System.currentTimeMillis())
+            .build());
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Object> handleOperatorMismatchExceptionException(
+      OperatorMismatchException exception) {
+    return ResponseHandler.generateErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ErrorResponse.builder()
+            .message(exception.getMessage())
+            .timestamp(System.currentTimeMillis())
+            .build());
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Object> handleHigherPrecedenceOperatorFoundException(
+      HigherPrecedenceOperatorFound exception) {
+    return ResponseHandler.generateErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ErrorResponse.builder()
+            .message(exception.getMessage())
+            .timestamp(System.currentTimeMillis())
+            .build());
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Object> handleEmptyExpressionExceptionException(
+      EmptyExpressionException exception) {
+    return ResponseHandler.generateErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ErrorResponse.builder()
+            .message(exception.getMessage())
+            .timestamp(System.currentTimeMillis())
+            .build());
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Object> handleNoLogicalExpressionExceptionException(
+      NoLogicalExpressionException exception) {
+    return ResponseHandler.generateErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ErrorResponse.builder()
+            .message(exception.getMessage())
+            .timestamp(System.currentTimeMillis())
+            .build());
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Object> handleNoTreeGeneratedException(NoTreeGenerated exception) {
+    return ResponseHandler.generateErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ErrorResponse.builder()
+            .message(exception.getMessage())
+            .timestamp(System.currentTimeMillis())
+            .build());
+  }
+
 }
