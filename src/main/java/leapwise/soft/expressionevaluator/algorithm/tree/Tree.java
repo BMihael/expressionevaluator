@@ -157,6 +157,9 @@ public class Tree {
     Object item;
     try {
       item = json.get(node.getNodeValue());
+      if (item == JSONObject.NULL) {
+        throw new JSONException("Object is null");
+      }
     } catch (JSONException ex) {
       return "null";
     }

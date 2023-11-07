@@ -36,6 +36,9 @@ public class UserDefinedTest {
   private static final String operatorMismatchTest3 = "1<null";
   private static final String operatorMismatchTest4 = "null<1";
 
+  private static final String expressionVariableIsNull = "(customer.address == null)";
+  private static final String expressionVariableIsNotNull = "(customer.address != null)";
+
   @Test
   public void expression() throws JSONException {
     TreeProvider.provideExpression(expression);
@@ -182,22 +185,42 @@ public class UserDefinedTest {
     assertEquals(exceptionArguments.get(1), "1");
   }
 
-    private JSONObject buildJsonObject() throws JSONException {
-        JSONObject jsonObjectInnerInner = new JSONObject();
-        jsonObjectInnerInner.put("city", "Chicago");
-        jsonObjectInnerInner.put("zipCode", 1234);
-        jsonObjectInnerInner.put("street", "56th");
-        jsonObjectInnerInner.put("houseNumber",2345);
+  @Test
+  public void expressionVariableIsNull() throws JSONException {
+    JSONObject jsonObjectInner = new JSONObject();
+    jsonObjectInner.put("address", JSONObject.NULL);
 
-        JSONObject jsonObjectInner = new JSONObject();
-        jsonObjectInner.put("address", jsonObjectInnerInner);
-        jsonObjectInner.put("firstName", "JOHN");
-        jsonObjectInner.put("lastName", "DOE");
-        jsonObjectInner.put("salary", 99);
-        jsonObjectInner.put("type", "BUSINESS");
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("customer", jsonObjectInner);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("customer", jsonObjectInner);
-        return jsonObject;
-    }
+    TreeProvider.provideExpression(expressionVariableIsNull);
+    TreeProvider.fillTreeHelper(jsonObject);
+    assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
+  }
+
+  @Test
+  public void expressionVariableIsNotNull() throws JSONException {
+    TreeProvider.provideExpression(expressionVariableIsNotNull);
+    TreeProvider.fillTreeHelper(buildJsonObject());
+    assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
+  }
+
+  private JSONObject buildJsonObject() throws JSONException {
+    JSONObject jsonObjectInnerInner = new JSONObject();
+    jsonObjectInnerInner.put("city", "Chicago");
+    jsonObjectInnerInner.put("zipCode", 1234);
+    jsonObjectInnerInner.put("street", "56th");
+    jsonObjectInnerInner.put("houseNumber", 2345);
+
+    JSONObject jsonObjectInner = new JSONObject();
+    jsonObjectInner.put("address", jsonObjectInnerInner);
+    jsonObjectInner.put("firstName", "JOHN");
+    jsonObjectInner.put("lastName", "DOE");
+    jsonObjectInner.put("salary", 99);
+    jsonObjectInner.put("type", "BUSINESS");
+
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("customer", jsonObjectInner);
+    return jsonObject;
+  }
 }
