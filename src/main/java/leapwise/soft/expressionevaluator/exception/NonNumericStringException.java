@@ -9,6 +9,6 @@ public class NonNumericStringException extends MultipleArgumentsException {
     }
 
     public NonNumericStringException(String message, String... args) {
-        super(String.format(message, args[0], args[1]), NUM_OF_ARGUMENTS, args);
+        super(String.format(message, args[0]), NUM_OF_ARGUMENTS, args);
     }
 }
