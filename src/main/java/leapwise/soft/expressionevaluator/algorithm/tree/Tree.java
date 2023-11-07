@@ -16,7 +16,7 @@ import static leapwise.soft.expressionevaluator.algorithm.helper.NumericStringCh
 import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.NO_LOGICAL_EXPRESSION;
 
 public class Tree {
-  public Node root;
+  private Node root;
 
   public void add(String value) {
     root = addRecursive(value);
@@ -186,5 +186,9 @@ public class Tree {
       return NodeType.NUMERIC_NODE;
     }
     return NodeType.STRING_NODE;
+  }
+
+  public Node getRoot() {
+    return root;
   }
 }
