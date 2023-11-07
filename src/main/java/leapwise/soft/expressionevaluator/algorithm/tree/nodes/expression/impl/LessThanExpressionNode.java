@@ -3,9 +3,9 @@ package leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.Node;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.NodeType;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.ExpressionNode;
-import leapwise.soft.expressionevaluator.exception.OperatorMismatchException;
+import leapwise.soft.expressionevaluator.exception.algorithm.tree.NonComparableValuesException;
 
-import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.OPERATOR_MISMATCH;
+import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.NON_COMPARABLE_VALUES;
 
 public class LessThanExpressionNode extends ExpressionNode {
 
@@ -16,19 +16,12 @@ public class LessThanExpressionNode extends ExpressionNode {
   @Override
   public boolean makeResult(Node n1, Node n2) {
     if (n1.getNodeType() != NodeType.NUMERIC_NODE || n2.getNodeType() != NodeType.NUMERIC_NODE) {
-      throw new OperatorMismatchException(OPERATOR_MISMATCH, n1.getNodeValue(), n2.getNodeValue());
+      throw new NonComparableValuesException(
+          NON_COMPARABLE_VALUES, n1.getNodeValue(), n2.getNodeValue());
     }
-    String num1 = n1.getNodeValue();
-    String num2 = n2.getNodeValue();
+    double num1 = parseNumber(n1.getNodeValue());
+    double num2 = parseNumber(n2.getNodeValue());
 
-    int number1 = 0;
-    int number2 = 0;
-    try {
-      number1 = Integer.parseInt(num1);
-      number2 = Integer.parseInt(num2);
-    } catch (NumberFormatException ex) {
-      ex.printStackTrace();
-    }
-    return number1 < number2;
+    return num1 < num2;
   }
 }

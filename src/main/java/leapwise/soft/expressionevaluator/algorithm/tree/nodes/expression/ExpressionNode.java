@@ -15,4 +15,12 @@ public abstract class ExpressionNode extends Node {
     public int getPresedance(){
         return this.presedance;
     }
+
+    protected double parseNumber(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException ex) {
+            throw ex;
+        }
+    }
 }
