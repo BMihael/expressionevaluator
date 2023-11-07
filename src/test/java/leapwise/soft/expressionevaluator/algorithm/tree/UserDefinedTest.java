@@ -127,9 +127,9 @@ public class UserDefinedTest {
 
   @Test
   public void operatorMismatchTest1() {
-    OperatorMismatchException exception =
+    NonComparableValuesException exception =
         assertThrows(
-            OperatorMismatchException.class,
+                NonComparableValuesException.class,
             () -> {
               TreeProvider.provideExpression(operatorMismatchTest1);
               TreeProvider.printResult();
@@ -142,9 +142,9 @@ public class UserDefinedTest {
 
   @Test
   public void operatorMismatchTest2() {
-    OperatorMismatchException exception =
+    NonComparableValuesException exception =
         assertThrows(
-            OperatorMismatchException.class,
+                NonComparableValuesException.class,
             () -> {
               TreeProvider.provideExpression(operatorMismatchTest2);
               TreeProvider.printResult();
@@ -157,9 +157,9 @@ public class UserDefinedTest {
 
   @Test
   public void operatorMismatchTest3() {
-    OperatorMismatchException exception =
+    NonComparableValuesException exception =
         assertThrows(
-            OperatorMismatchException.class,
+                NonComparableValuesException.class,
             () -> {
               TreeProvider.provideExpression(operatorMismatchTest3);
               TreeProvider.printResult();
@@ -172,9 +172,9 @@ public class UserDefinedTest {
 
   @Test
   public void operatorMismatchTest4() {
-    OperatorMismatchException exception =
+    NonComparableValuesException exception =
         assertThrows(
-            OperatorMismatchException.class,
+                NonComparableValuesException.class,
             () -> {
               TreeProvider.provideExpression(operatorMismatchTest4);
               TreeProvider.printResult();
