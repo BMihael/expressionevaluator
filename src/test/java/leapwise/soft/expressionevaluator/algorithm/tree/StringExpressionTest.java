@@ -220,10 +220,17 @@ public class StringExpressionTest {
 
   private JSONObject buildJsonObject() throws JSONException {
     JSONObject jsonObjectInnerInner = new JSONObject();
-    jsonObjectInnerInner.put("city", 30);
+    jsonObjectInnerInner.put("city", "Chicago");
+    jsonObjectInnerInner.put("zipCode", 1234);
+    jsonObjectInnerInner.put("street", "56th");
+    jsonObjectInnerInner.put("houseNumber",2345);
 
     JSONObject jsonObjectInner = new JSONObject();
     jsonObjectInner.put("address", jsonObjectInnerInner);
+    jsonObjectInner.put("firstName", "JOHN");
+    jsonObjectInner.put("lastName", "DOE");
+    jsonObjectInner.put("salary", 99);
+    jsonObjectInner.put("type", "BUSINESS");
 
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("customer", jsonObjectInner);
