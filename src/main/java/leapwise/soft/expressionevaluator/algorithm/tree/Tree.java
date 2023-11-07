@@ -144,18 +144,14 @@ public class Tree {
 
     if (node.getNodeType() == NodeType.VARIABLE_STRING_NODE) {
       String recursivelyFoundValue =
-          recursivelyGetVariableNames("", (VariableStringNode) node, jsonObject).toString();
+          recursivelyGetVariableNames((VariableStringNode) node, jsonObject).toString();
       node.setValue(recursivelyFoundValue);
       node.setType(determineNodeType(recursivelyFoundValue));
       ((VariableStringNode) node).setChild(null);
     }
   }
 
-  public static Object recursivelyGetVariableNames(
-      String path, VariableStringNode node, JSONObject json) {
-    path += node.getNodeValue();
-    node.setPath(path);
-
+  public static Object recursivelyGetVariableNames(VariableStringNode node, JSONObject json) {
     Object item;
     try {
       item = json.get(node.getNodeValue());
@@ -177,9 +173,7 @@ public class Tree {
       return "X";
     }
 
-    path += ".";
-    return recursivelyGetVariableNames(
-        path, node.getChild(), (JSONObject) json.get(node.getNodeValue()));
+    return recursivelyGetVariableNames(node.getChild(), (JSONObject) json.get(node.getNodeValue()));
   }
 
   public static NodeType determineNodeType(String value) {
