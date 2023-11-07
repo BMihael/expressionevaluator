@@ -2,13 +2,9 @@ package leapwise.soft.expressionevaluator.algorithm.tree;
 
 import leapwise.soft.expressionevaluator.algorithm.helper.ExpressionValidator;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.Node;
-import leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage;
-import leapwise.soft.expressionevaluator.exception.algorithm.tree.EmptyExpressionException;
-import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoTreeGenerated;
 import org.json.JSONObject;
 
-import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.NO_LOGICAL_EXPRESSION;
 import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.NO_TREE_GENERATED;
 
 public class TreeProvider {

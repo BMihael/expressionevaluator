@@ -1,7 +1,6 @@
 package leapwise.soft.expressionevaluator.algorithm.tree;
 
 import leapwise.soft.expressionevaluator.ExpressionResult;
-import leapwise.soft.expressionevaluator.exception.OperatorMismatchException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.EmptyExpressionException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NonComparableValuesException;
@@ -129,7 +128,7 @@ public class UserDefinedTest {
   public void operatorMismatchTest1() {
     NonComparableValuesException exception =
         assertThrows(
-                NonComparableValuesException.class,
+            NonComparableValuesException.class,
             () -> {
               TreeProvider.provideExpression(operatorMismatchTest1);
               TreeProvider.printResult();
@@ -144,7 +143,7 @@ public class UserDefinedTest {
   public void operatorMismatchTest2() {
     NonComparableValuesException exception =
         assertThrows(
-                NonComparableValuesException.class,
+            NonComparableValuesException.class,
             () -> {
               TreeProvider.provideExpression(operatorMismatchTest2);
               TreeProvider.printResult();
@@ -159,7 +158,7 @@ public class UserDefinedTest {
   public void operatorMismatchTest3() {
     NonComparableValuesException exception =
         assertThrows(
-                NonComparableValuesException.class,
+            NonComparableValuesException.class,
             () -> {
               TreeProvider.provideExpression(operatorMismatchTest3);
               TreeProvider.printResult();
@@ -174,7 +173,7 @@ public class UserDefinedTest {
   public void operatorMismatchTest4() {
     NonComparableValuesException exception =
         assertThrows(
-                NonComparableValuesException.class,
+            NonComparableValuesException.class,
             () -> {
               TreeProvider.provideExpression(operatorMismatchTest4);
               TreeProvider.printResult();

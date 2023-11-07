@@ -114,17 +114,6 @@ public class RestExceptionHandler {
   }
 
   @ExceptionHandler
-  public ResponseEntity<Object> handleOperatorMismatchExceptionException(
-      OperatorMismatchException exception) {
-    return ResponseHandler.generateErrorResponse(
-        HttpStatus.BAD_REQUEST,
-        ErrorResponse.builder()
-            .message(exception.getMessage())
-            .timestamp(System.currentTimeMillis())
-            .build());
-  }
-
-  @ExceptionHandler
   public ResponseEntity<Object> handleHigherPrecedenceOperatorFoundException(
       HigherPrecedenceOperatorFound exception) {
     return ResponseHandler.generateErrorResponse(
@@ -166,5 +155,4 @@ public class RestExceptionHandler {
             .timestamp(System.currentTimeMillis())
             .build());
   }
-
 }

@@ -10,8 +10,8 @@ import static leapwise.soft.expressionevaluator.algorithm.tree.nodes.NodeType.*;
 
 public class EqualsExpressionOperator extends ExpressionNode {
 
-  static Map<String, ComparingStrategy> nullStrategyMap = new HashMap<>();
-  static Map<String, ComparingStrategy> nonNullStrategyMap = new HashMap<>();
+  static final Map<String, ComparingStrategy> nullStrategyMap = new HashMap<>();
+  static final Map<String, ComparingStrategy> nonNullStrategyMap = new HashMap<>();
 
   static {
     nullStrategyMap.put(NULL_NODE.name().concat(NULL_NODE.name()), new NullComparingStrategy());
