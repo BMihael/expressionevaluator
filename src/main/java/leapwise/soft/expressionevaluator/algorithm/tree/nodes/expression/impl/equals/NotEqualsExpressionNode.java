@@ -1,4 +1,4 @@
-package leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl;
+package leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.equals;
 
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.Node;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.NodeType;
