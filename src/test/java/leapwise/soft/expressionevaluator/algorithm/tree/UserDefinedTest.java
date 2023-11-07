@@ -16,8 +16,6 @@ public class UserDefinedTest {
 
   private static final String expression =
       "(customer.firstName == \"JOHN\" && customer.salary < 100) OR (customer.address != null && customer.address.city == \"Washington\")";
-  private static final String expressionPopulated =
-      "(\"JOHN\" == \"JOHN\" && 99 < 100) OR (X != null && \"Chicago\" == \"Washington\")";
 
   private static final String emptyExpression = "";
   private static final String noLogicalExpression = "((";
@@ -32,9 +30,15 @@ public class UserDefinedTest {
 
   private static final String oneExpressionElementIsNumberOtherIsString = "(99 == \"JOHN\")";
 
+  private static final String operatorMismatchTest1 = "1>null";
+  private static final String operatorMismatchTest2 = "null>1";
+  private static final String operatorMismatchTest3 = "1<null";
+  private static final String operatorMismatchTest4 = "null<1";
+
   @Test
-  public void expression() {
-    TreeProvider.provideExpression(expressionPopulated);
+  public void expression() throws JSONException {
+    TreeProvider.provideExpression(expression);
+    TreeProvider.fillTreeHelper(buildJsonObject());
     assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
   }
 
@@ -116,4 +120,83 @@ public class UserDefinedTest {
     assertEquals(exceptionArguments.get(0), "99");
     assertEquals(exceptionArguments.get(1), "\"JOHN\"");
   }
+
+  @Test
+  public void operatorMismatchTest1() {
+    OperatorMismatchException exception =
+        assertThrows(
+            OperatorMismatchException.class,
+            () -> {
+              TreeProvider.provideExpression(operatorMismatchTest1);
+              TreeProvider.printResult();
+            });
+
+    List<String> exceptionArguments = exception.getArguments();
+    assertEquals(exceptionArguments.get(0), "1");
+    assertEquals(exceptionArguments.get(1), "null");
+  }
+
+  @Test
+  public void operatorMismatchTest2() {
+    OperatorMismatchException exception =
+        assertThrows(
+            OperatorMismatchException.class,
+            () -> {
+              TreeProvider.provideExpression(operatorMismatchTest2);
+              TreeProvider.printResult();
+            });
+
+    List<String> exceptionArguments = exception.getArguments();
+    assertEquals(exceptionArguments.get(0), "null");
+    assertEquals(exceptionArguments.get(1), "1");
+  }
+
+  @Test
+  public void operatorMismatchTest3() {
+    OperatorMismatchException exception =
+        assertThrows(
+            OperatorMismatchException.class,
+            () -> {
+              TreeProvider.provideExpression(operatorMismatchTest3);
+              TreeProvider.printResult();
+            });
+
+    List<String> exceptionArguments = exception.getArguments();
+    assertEquals(exceptionArguments.get(0), "1");
+    assertEquals(exceptionArguments.get(1), "null");
+  }
+
+  @Test
+  public void operatorMismatchTest4() {
+    OperatorMismatchException exception =
+        assertThrows(
+            OperatorMismatchException.class,
+            () -> {
+              TreeProvider.provideExpression(operatorMismatchTest4);
+              TreeProvider.printResult();
+            });
+
+    List<String> exceptionArguments = exception.getArguments();
+    assertEquals(exceptionArguments.get(0), "null");
+    assertEquals(exceptionArguments.get(1), "1");
+  }
+
+    private JSONObject buildJsonObject() throws JSONException {
+        JSONObject jsonObjectInnerInner = new JSONObject();
+        jsonObjectInnerInner.put("city", "Chicago");
+        jsonObjectInnerInner.put("zipCode", 1234);
+        jsonObjectInnerInner.put("street", "56th");
+        jsonObjectInnerInner.put("houseNumber",2345);
+
+        JSONObject jsonObjectInner = new JSONObject();
+        jsonObjectInner.put("address", jsonObjectInnerInner);
+        jsonObjectInner.put("firstName", "JOHN");
+        jsonObjectInner.put("lastName", "DOE");
+        jsonObjectInner.put("salary", 99);
+        jsonObjectInner.put("type", "BUSINESS");
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("customer", jsonObjectInner);
+        return jsonObject;
+    }
 }

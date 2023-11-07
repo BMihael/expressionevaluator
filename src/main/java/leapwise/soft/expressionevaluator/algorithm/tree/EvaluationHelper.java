@@ -3,8 +3,10 @@ package leapwise.soft.expressionevaluator.algorithm.tree;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.*;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.bool.BooleanExpressionNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.ExpressionNode;
+import leapwise.soft.expressionevaluator.exception.CriticalException;
 import leapwise.soft.expressionevaluator.exception.algorithm.stack.HigherPrecedenceOperatorFound;
 
+import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.CRITICAL_EXCEPTION_MESSAGE;
 import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.HIGHER_OPERATOR_PRECEDENCE_FOUND;
 
 public class EvaluationHelper {
@@ -14,22 +16,10 @@ public class EvaluationHelper {
   }
 
   public static Node evaluateNode(Node node) {
-    if (NodeType.EXPRESSION_NODE.equals(node.getNodeType())) { // ovo mozda nikada nece biti false
+    if (NodeType.EXPRESSION_NODE.equals(node.getNodeType())) {
       return evaluateExpressionNode(node.getLeft(), (ExpressionNode) node, node.getRight());
     }
-    throw new RuntimeException(
-        "Ovdje je doslo do situacije da srednji node nije expression node n1:"
-            + node.getNodeType()
-            + " "
-            + node.getNodeValue()
-            + " "
-            + node.getLeft().getNodeType()
-            + " "
-            + node.getLeft().getNodeValue()
-            + " "
-            + node.getRight().getNodeType()
-            + " "
-            + node.getRight().getNodeValue());
+    throw new CriticalException(CRITICAL_EXCEPTION_MESSAGE);
   }
 
   public static boolean hasHigherPresedance(ExpressionNode node1, ExpressionNode node2) {

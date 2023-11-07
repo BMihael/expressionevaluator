@@ -140,15 +140,15 @@ public class Tree {
 
     if (node.getNodeType() == NodeType.VARIABLE_STRING_NODE) {
       String recursivelyFoundValue =
-          maloRekurzije("", (VariableStringNode) node, jsonObject).toString();
+          recursivelyGetVariableNames("", (VariableStringNode) node, jsonObject).toString();
       node.setValue(recursivelyFoundValue);
       node.setType(determineNodeType(recursivelyFoundValue));
       ((VariableStringNode) node).setChild(null);
     }
   }
 
-  public static Object maloRekurzije(String path, VariableStringNode node, JSONObject json) {
-    path = path + node.getNodeValue();
+  public static Object recursivelyGetVariableNames(String path, VariableStringNode node, JSONObject json) {
+    path += path + node.getNodeValue();
     Object a;
     ((VariableStringNode) node).setPath(path);
     Object item;
@@ -172,7 +172,7 @@ public class Tree {
       return "X";
     }
     path += ".";
-    return maloRekurzije(path, node.getChild(), (JSONObject) json.get(node.getNodeValue()));
+    return recursivelyGetVariableNames(path, node.getChild(), (JSONObject) json.get(node.getNodeValue()));
   }
 
   public static NodeType determineNodeType(String value) {
