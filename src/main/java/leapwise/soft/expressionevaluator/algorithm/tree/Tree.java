@@ -8,10 +8,12 @@ import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.*;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.nothingnode.NullNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.impl.CleanStringNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.string.impl.VariableStringNode;
+import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static leapwise.soft.expressionevaluator.algorithm.helper.NumericStringCheckerImpl.checkIfNumericReturnBoolean;
+import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.NO_LOGICAL_EXPRESSION;
 
 public class Tree {
   public Node root;
@@ -99,7 +101,7 @@ public class Tree {
     if (value.contains("!=")) return new NotEqualsExpressionNode(value, NodeType.EXPRESSION_NODE);
     if (value.contains(">")) return new GraterThanExpressionNode(value, NodeType.EXPRESSION_NODE);
     if (value.contains("<")) return new LessThanExpressionNode(value, NodeType.EXPRESSION_NODE);
-    throw new RuntimeException("Ovjde sam nesto nije dobro: " + value);
+    throw new NoLogicalExpressionException(NO_LOGICAL_EXPRESSION);
   }
 
   public String removeParentheses(String value) {
@@ -113,7 +115,7 @@ public class Tree {
     if (value.contains("!=")) return "!=";
     if (value.contains(">")) return ">";
     if (value.contains("<")) return "<";
-    throw new RuntimeException("Nije pronađen logički izraz");
+    throw new NoLogicalExpressionException(NO_LOGICAL_EXPRESSION);
   }
 
   public static Node printTree(Node node) {
@@ -147,10 +149,11 @@ public class Tree {
     }
   }
 
-  public static Object recursivelyGetVariableNames(String path, VariableStringNode node, JSONObject json) {
-    path += path + node.getNodeValue();
-    Object a;
-    ((VariableStringNode) node).setPath(path);
+  public static Object recursivelyGetVariableNames(
+      String path, VariableStringNode node, JSONObject json) {
+    path += node.getNodeValue();
+    node.setPath(path);
+
     Object item;
     try {
       item = json.get(node.getNodeValue());
@@ -160,19 +163,18 @@ public class Tree {
 
     if (node.getChild() == null) {
       if (item instanceof String) {
-        a = item;
-        a = "\"" + a + "\"";
-        return a;
+        return "\"" + item + "\"";
       } else if (item instanceof Number) {
-        a = item;
-        return a;
+        return item;
       } else if (item == JSONObject.NULL) {
         return "null";
       }
       return "X";
     }
+
     path += ".";
-    return recursivelyGetVariableNames(path, node.getChild(), (JSONObject) json.get(node.getNodeValue()));
+    return recursivelyGetVariableNames(
+        path, node.getChild(), (JSONObject) json.get(node.getNodeValue()));
   }
 
   public static NodeType determineNodeType(String value) {
