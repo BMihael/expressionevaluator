@@ -11,4 +11,6 @@ public interface AlgorithmExceptionMessage {
       "The specified field, '%s' is not found within the JSON dataset";
   String OPERATOR_MISMATCH = "Operator missmatch between %s and %s";
   String CRITICAL_EXCEPTION_MESSAGE = "Critical Exception Alert";
+  String NON_NUMERIC_STRING = "Input is not a numeric string";
+  String INVALID_NUMBER_OF_ARGUMENTS = " Invalid number of arguments";
 }

@@ -17,15 +17,15 @@ public class GraterThanExpressionNode extends ExpressionNode {
     if (n1.getNodeType() != NodeType.NUMERIC_NODE || n2.getNodeType() != NodeType.NUMERIC_NODE) {
       throw new OperatorMismatchException(OPERATOR_MISMATCH, n1.getNodeValue(), n2.getNodeValue());
     }
-    int number1 = parseInt(n1.getNodeValue());
-    int number2 = parseInt(n2.getNodeValue());
+    double num1 = parseNumber(n1.getNodeValue());
+    double num2 = parseNumber(n2.getNodeValue());
 
-    return number1 > number2;
+    return num1 > num2;
   }
 
-  private int parseInt(String value) {
+  private double parseNumber(String value) {
     try {
-      return Integer.parseInt(value);
+      return Double.parseDouble(value);
     } catch (NumberFormatException ex) {
       throw ex;
     }

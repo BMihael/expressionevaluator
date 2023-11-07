@@ -26,15 +26,15 @@ public class StackHelper {
     List<StackNodeWrapper> stackItems =
         stack.getStackArray().stream().filter(Objects::nonNull).collect(Collectors.toList());
 
-    List<StackNodeWrapper> list =
+    List<StackNodeWrapper> operatorsOnStack =
         stackItems.stream()
             .filter(item -> item.getNode().getNodeType() != NodeType.STRING_NODE)
             .collect(Collectors.toList());
 
-    StackNodeWrapper stackNodeWrapperWinner = list.get(0);
+    StackNodeWrapper stackNodeWrapperWinner = operatorsOnStack.get(0);
     Node nodeWinner = stackNodeWrapperWinner.getNode();
 
-    for (StackNodeWrapper item : list) {
+    for (StackNodeWrapper item : operatorsOnStack) {
       Node innerNode = item.getNode();
 
       if (innerNode.getLevel() == nodeWinner.getLevel()

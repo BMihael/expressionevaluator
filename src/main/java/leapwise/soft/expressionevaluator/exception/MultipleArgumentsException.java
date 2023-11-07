@@ -3,6 +3,8 @@ package leapwise.soft.expressionevaluator.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.INVALID_NUMBER_OF_ARGUMENTS;
+
 public abstract class MultipleArgumentsException extends RuntimeException {
 
   private List<String> argumentsArray;
@@ -14,7 +16,7 @@ public abstract class MultipleArgumentsException extends RuntimeException {
   public MultipleArgumentsException(String message, int maxNumberOfArguments, String... args) {
     super(message);
     if (args.length > maxNumberOfArguments) {
-      throw new RuntimeException("Previse argumenata");
+      throw new RuntimeException(INVALID_NUMBER_OF_ARGUMENTS);
     }
     argumentsArray = new ArrayList<>();
     for (int i = 0; i < maxNumberOfArguments; i++) {
