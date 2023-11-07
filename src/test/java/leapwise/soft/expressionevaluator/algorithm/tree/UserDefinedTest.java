@@ -1,6 +1,7 @@
 package leapwise.soft.expressionevaluator.algorithm.tree;
 
 import leapwise.soft.expressionevaluator.ExpressionResult;
+import leapwise.soft.expressionevaluator.exception.OperatorMismatchException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.EmptyExpressionException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NonComparableValuesException;
