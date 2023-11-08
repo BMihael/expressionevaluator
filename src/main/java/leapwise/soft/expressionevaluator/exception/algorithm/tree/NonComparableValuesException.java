@@ -2,7 +2,7 @@ package leapwise.soft.expressionevaluator.exception.algorithm.tree;
 
 import leapwise.soft.expressionevaluator.exception.MultipleArgumentsException;
 
-public class NonComparableValuesException extends MultipleArgumentsException { // pogledati ovo jos jednom
+public class NonComparableValuesException extends MultipleArgumentsException {
   private static final int NUM_OF_ARGUMENTS = 2;
 
   public NonComparableValuesException(String message) {

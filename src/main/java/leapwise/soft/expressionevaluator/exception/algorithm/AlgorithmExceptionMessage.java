@@ -10,6 +10,6 @@ public interface AlgorithmExceptionMessage {
   String FIELD_DOES_NOT_EXISTS_IN_JSON =
       "The specified field, '%s' is not found within the JSON dataset";
   String CRITICAL_EXCEPTION_MESSAGE = "Critical Exception Alert";
-  String NON_NUMERIC_STRING = "Input is not a numeric string";
+  String NON_NUMERIC_STRING = "Input %s is not a numeric string";
   String INVALID_NUMBER_OF_ARGUMENTS = " Invalid number of arguments";
 }

@@ -22,11 +22,14 @@ class NumericStringCheckerTest {
 
   @Test
   void checkIfNumeric_FailedTest() {
-    assertThrows(
-        NonNumericStringException.class,
-        () -> {
-          NumericStringCheckerImpl.checkIfNumeric(STRING_KEYWORD);
-        });
+    NonNumericStringException exception =
+        assertThrows(
+            NonNumericStringException.class,
+            () -> {
+              NumericStringCheckerImpl.checkIfNumeric(STRING_KEYWORD);
+            });
+
+    Assertions.assertEquals(exception.getArguments().get(0), STRING_KEYWORD);
   }
 
   @Test
