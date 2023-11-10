@@ -11,10 +11,6 @@ import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExc
 
 public class EvaluationHelper {
 
-  public static Node evaluateExpressionNode(Node n1, ExpressionNode n2, Node n3) {
-    return new BooleanExpressionNode(n2.makeResult(n1, n3), NodeType.BOOLEAN_NODE);
-  }
-
   public static Node evaluateNode(Node node) {
     if (NodeType.EXPRESSION_NODE.equals(node.getNodeType())) {
       return evaluateExpressionNode(node.getLeft(), (ExpressionNode) node, node.getRight());
@@ -27,5 +23,9 @@ public class EvaluationHelper {
       throw new HigherPrecedenceOperatorFound(HIGHER_OPERATOR_PRECEDENCE_FOUND);
     }
     return node1.getPresedance() > node2.getPresedance();
+  }
+
+  private static Node evaluateExpressionNode(Node n1, ExpressionNode n2, Node n3) {
+    return new BooleanExpressionNode(n2.makeResult(n1, n3), NodeType.BOOLEAN_NODE);
   }
 }

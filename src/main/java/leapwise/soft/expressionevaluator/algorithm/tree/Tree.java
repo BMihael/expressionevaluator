@@ -20,6 +20,41 @@ import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExc
 public class Tree {
   private Node root;
 
+  public Node getRoot() {
+    return root;
+  }
+
+  public static Node printTree(Node node) {
+    if (node == null) return null;
+
+    node.setLeftNode(printTree(node.getLeft()));
+    node.setRightNode(printTree(node.getRight()));
+
+    if (node.getLeft() == null && node.getRight() == null) {
+      return node;
+    }
+    return EvaluationHelper.evaluateNode(node);
+  }
+
+  public static void fillTree(Node node, JSONObject jsonObject) {
+    if (node == null) return;
+
+    fillTree(node.getLeft(), jsonObject);
+    fillTree(node.getRight(), jsonObject);
+
+    if (!(node.getLeft() == null && node.getRight() == null)) {
+      return;
+    }
+
+    if (node.getNodeType() == NodeType.VARIABLE_STRING_NODE) {
+      String recursivelyFoundValue =
+          recursivelyGetVariableNames((VariableStringNode) node, jsonObject).toString();
+      node.setValue(recursivelyFoundValue);
+      node.setType(determineNodeType(recursivelyFoundValue));
+      ((VariableStringNode) node).setChild(null);
+    }
+  }
+
   public void add(String value) {
     root = addRecursive(value);
   }
@@ -136,7 +171,7 @@ public class Tree {
     return true;
   }
 
-  public ExpressionNode getLogicalExpressionAsNodeByValue(String value) {
+  private ExpressionNode getLogicalExpressionAsNodeByValue(String value) {
     if (value.contains("&&")) return new LogicalAndExpressionNode(value, NodeType.EXPRESSION_NODE);
     if (value.contains("==")) return new EqualsExpressionOperator(value, NodeType.EXPRESSION_NODE);
     if (value.contains("OR") | value.contains("or"))
@@ -147,11 +182,11 @@ public class Tree {
     throw new NoLogicalExpressionException(NO_LOGICAL_EXPRESSION);
   }
 
-  public String removeParentheses(String value) {
+  private String removeParentheses(String value) {
     return value.replaceAll("[()]", "");
   }
 
-  public static String getRemainingLogicalExpression(String value) {
+  private static String getRemainingLogicalExpression(String value) {
     if (value.contains("&&")) return "&&";
     if (value.contains("OR")) return "OR";
     if (value.contains("==")) return "==";
@@ -161,38 +196,7 @@ public class Tree {
     throw new NoLogicalExpressionException(NO_LOGICAL_EXPRESSION);
   }
 
-  public static Node printTree(Node node) {
-    if (node == null) return null;
-
-    node.setLeftNode(printTree(node.getLeft()));
-    node.setRightNode(printTree(node.getRight()));
-
-    if (node.getLeft() == null && node.getRight() == null) {
-      return node;
-    }
-    return EvaluationHelper.evaluateNode(node);
-  }
-
-  public static void fillTree(Node node, JSONObject jsonObject) {
-    if (node == null) return;
-
-    fillTree(node.getLeft(), jsonObject);
-    fillTree(node.getRight(), jsonObject);
-
-    if (!(node.getLeft() == null && node.getRight() == null)) {
-      return;
-    }
-
-    if (node.getNodeType() == NodeType.VARIABLE_STRING_NODE) {
-      String recursivelyFoundValue =
-          recursivelyGetVariableNames((VariableStringNode) node, jsonObject).toString();
-      node.setValue(recursivelyFoundValue);
-      node.setType(determineNodeType(recursivelyFoundValue));
-      ((VariableStringNode) node).setChild(null);
-    }
-  }
-
-  public static Object recursivelyGetVariableNames(VariableStringNode node, JSONObject json) {
+  private static Object recursivelyGetVariableNames(VariableStringNode node, JSONObject json) {
     Object item;
     try {
       item = json.get(node.getNodeValue());
@@ -208,8 +212,6 @@ public class Tree {
         return "\"" + item + "\"";
       } else if (item instanceof Number) {
         return item;
-      } else if (item == JSONObject.NULL) {
-        return "null";
       }
       return "X";
     }
@@ -217,7 +219,7 @@ public class Tree {
     return recursivelyGetVariableNames(node.getChild(), (JSONObject) json.get(node.getNodeValue()));
   }
 
-  public static NodeType determineNodeType(String value) {
+  private static NodeType determineNodeType(String value) {
     if (value.equals("null")) {
       return NodeType.NULL_NODE;
     } else if (value.equals("X")) {
@@ -226,9 +228,5 @@ public class Tree {
       return NodeType.NUMERIC_NODE;
     }
     return NodeType.STRING_NODE;
-  }
-
-  public Node getRoot() {
-    return root;
   }
 }

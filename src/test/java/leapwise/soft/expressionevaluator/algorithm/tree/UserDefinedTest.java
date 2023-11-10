@@ -16,6 +16,8 @@ public class UserDefinedTest {
 
   private static final String expression =
       "(customer.firstName == \"JOHN\" && customer.salary < 100) OR (customer.address != null && customer.address.city == \"Washington\")";
+  private static final String expressionWithAddressNull =
+          "(customer.firstName == \"JOHN\" && customer.salary < 100) && (customer.address != null or customer.address.city != null)";
 
   private static final String emptyExpression = "";
   private static final String noLogicalExpression = "((";
@@ -211,6 +213,24 @@ public class UserDefinedTest {
   public void expressionWithMoreThanOnLogicalOperatorWithoutParenthases() {
     TreeProvider.provideExpression(expressionWithMoreThanOnLogicalOperatorWithoutParentheses);
     assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
+  }
+
+  @Test
+  public void expressionWithAddressNull() throws JSONException {
+    TreeProvider.provideExpression(expressionWithAddressNull);
+
+    JSONObject jsonObjectInner = new JSONObject();
+    jsonObjectInner.put("address", JSONObject.NULL);
+    jsonObjectInner.put("firstName", "JOHN");
+    jsonObjectInner.put("lastName", "DOE");
+    jsonObjectInner.put("salary", 99);
+    jsonObjectInner.put("type", "BUSINESS");
+
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("customer", jsonObjectInner);
+
+    TreeProvider.fillTreeHelper(jsonObject);
+    assertEquals(ExpressionResult.FALSE.toString(), TreeProvider.printResult());
   }
 
   private JSONObject buildJsonObject() throws JSONException {
