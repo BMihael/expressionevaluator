@@ -10,7 +10,7 @@ import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExc
 
 public class GraterThanExpressionNode extends ExpressionNode {
   public GraterThanExpressionNode(String value, NodeType type) {
-    super(value, type, 0);
+    super(value, type, 1);
   }
 
   @Override
