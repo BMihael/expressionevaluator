@@ -3,6 +3,8 @@ package leapwise.soft.expressionevaluator.algorithm.stack;
 import leapwise.soft.expressionevaluator.algorithm.tree.EvaluationHelper;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.*;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.ExpressionNode;
+import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.GraterThanExpressionNode;
+import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.LessThanExpressionNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.equals.EqualsExpressionOperator;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.LogicalAndExpressionNode;
 import leapwise.soft.expressionevaluator.algorithm.tree.nodes.expression.impl.equals.NotEqualsExpressionNode;
@@ -45,6 +47,8 @@ public class StackHelper {
           && character != 'o'
           && character != 'O'
           && character != '&'
+          && character != '>'
+          && character != '<'
           && character != '!') {
         continue;
       }
@@ -100,6 +104,16 @@ public class StackHelper {
         node.setLevel(StackNodeWrapper.level);
         stack.push(new StackNodeWrapper(node, index));
         index = index + 1;
+      } else if (character == '>') {
+        emptyStackTillItselfIsEmptyOrExpressionIsEncountered();
+        Node node = new GraterThanExpressionNode(">", NodeType.EXPRESSION_NODE);
+        node.setLevel(StackNodeWrapper.level);
+        stack.push(new StackNodeWrapper(node, index));
+      } else if (character == '<') {
+        emptyStackTillItselfIsEmptyOrExpressionIsEncountered();
+        Node node = new LessThanExpressionNode("<", NodeType.EXPRESSION_NODE);
+        node.setLevel(StackNodeWrapper.level);
+        stack.push(new StackNodeWrapper(node, index));
       }
     }
   }
