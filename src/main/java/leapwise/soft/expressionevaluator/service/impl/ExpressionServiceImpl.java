@@ -1,6 +1,6 @@
 package leapwise.soft.expressionevaluator.service.impl;
 
-import leapwise.soft.expressionevaluator.algorithm.tree.TreeProvider;
+import leapwise.soft.expressionevaluator.structures.tree.TreeProvider;
 import leapwise.soft.expressionevaluator.exception.ExpressionWithGivenNameAlreadyExistsException;
 import leapwise.soft.expressionevaluator.exception.ExpressionWithIdDoesNotExistException;
 import leapwise.soft.expressionevaluator.model.Expression;
