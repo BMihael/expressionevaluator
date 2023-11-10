@@ -10,11 +10,6 @@ import static leapwise.soft.expressionevaluator.exception.algorithm.AlgorithmExc
 public class TreeProvider {
   static Tree tree = null;
 
-  public static void generate() {
-    tree = new Tree();
-    tree.add("");
-  }
-
   public static void provideExpression(String expression) {
     ExpressionValidator.checkValidityOfExpression(expression);
     generate();
@@ -31,6 +26,11 @@ public class TreeProvider {
   public static void fillTreeHelper(JSONObject input) {
     checkIfTreeIsGenerated();
     Tree.fillTree(tree.getRoot(), input);
+  }
+
+  private static void generate() {
+    tree = new Tree();
+    tree.add("");
   }
 
   private static void checkIfTreeIsGenerated() {

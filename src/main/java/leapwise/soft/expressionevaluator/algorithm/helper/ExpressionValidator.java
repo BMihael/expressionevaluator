@@ -34,5 +34,4 @@ public class ExpressionValidator {
     }
     throw new NoLogicalExpressionException(NO_LOGICAL_EXPRESSION);
   }
-
 }
