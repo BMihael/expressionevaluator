@@ -61,19 +61,19 @@ public class ExpressionServiceImpl implements ExpressionService {
   }
 
   private void checkIfExpressionNameExists(String name) {
-    Expression exp = expressionRepository.findExpressionByName(name);
-    if (exp != null) {
+    Expression expression = expressionRepository.findExpressionByName(name);
+    if (expression != null) {
       throw new ExpressionWithGivenNameAlreadyExistsException(
           EXCEPTION_WITH_NAME_ALREADY_EXISTS_IN_DATABASE);
     }
   }
 
   private Expression findExpressionByIdentifier(String id) {
-    Expression exp = expressionRepository.findExpressionByIdentifier(id);
-    if (exp == null) {
+    Expression expression = expressionRepository.findExpressionByIdentifier(id);
+    if (expression == null) {
       throw new ExpressionWithIdDoesNotExistException(
           EXCEPTION_ASSOCIATED_WITH_THE_PROVIDED_IDENTIFIER_DOES_NOT_EXIST);
     }
-    return exp;
+    return expression;
   }
 }

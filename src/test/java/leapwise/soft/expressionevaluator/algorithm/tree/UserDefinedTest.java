@@ -38,6 +38,9 @@ public class UserDefinedTest {
   private static final String expressionVariableIsNull = "(customer.address == null)";
   private static final String expressionVariableIsNotNull = "(customer.address != null)";
 
+  private static final String expressionWithMoreThanOnLogicalOperatorWithoutParentheses =
+      "(10>5) or (11>5) && (12>5)";
+
   @Test
   public void expression() throws JSONException {
     TreeProvider.provideExpression(expression);
@@ -201,6 +204,12 @@ public class UserDefinedTest {
   public void expressionVariableIsNotNull() throws JSONException {
     TreeProvider.provideExpression(expressionVariableIsNotNull);
     TreeProvider.fillTreeHelper(buildJsonObject());
+    assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
+  }
+
+  @Test
+  public void expressionWithMoreThanOnLogicalOperatorWithoutParenthases() {
+    TreeProvider.provideExpression(expressionWithMoreThanOnLogicalOperatorWithoutParentheses);
     assertEquals(ExpressionResult.TRUE.toString(), TreeProvider.printResult());
   }
 

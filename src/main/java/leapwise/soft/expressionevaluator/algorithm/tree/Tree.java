@@ -25,77 +25,118 @@ public class Tree {
   }
 
   private Node addRecursive(String value) {
-    Node current;
     if (value.equals("null")) {
-      current = new NullNode(value, NodeType.NULL_NODE);
-      return current;
+      return new NullNode(value, NodeType.NULL_NODE);
     }
     if (!(value.contains("&&")
         || value.contains("==")
-        || value.contains("OR")
+        || value.toLowerCase().matches("(.*\\b)or{1,2}(\\b.*)")
         || value.contains("!=")
         || value.contains(">")
         || value.contains("<"))) {
       if (value.equals("")) {
-        current =
-            new CleanStringNode(
-                value,
-                checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
-        return current;
+        return new CleanStringNode(
+            value,
+            checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
       }
       if (value.contains(".") || !(value.contains("\""))) {
         if (!(NumericStringCheckerImpl.checkIfNumericReturnBoolean(value))) {
-          current = new VariableStringNode(value, NodeType.VARIABLE_STRING_NODE);
-          return current;
+          return new VariableStringNode(value, NodeType.VARIABLE_STRING_NODE);
         }
       }
-
-      current =
-          new CleanStringNode(
-              value,
-              checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
-      return current;
+      return new CleanStringNode(
+          value, checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
     }
 
-    boolean containsOnlyOneExpression = containsOnlyOneExpression(value);
+    boolean containsOnlyOneExpression = containsOnlyOneLogicalExpression(value);
     if (containsOnlyOneExpression) {
-      String presentLogicalExpression = presentLogicalExpression(value);
-      int indexOfLogicalOperator = value.indexOf(presentLogicalExpression);
-
-      String leftExpression = value.substring(0, indexOfLogicalOperator).trim();
-      String rightExpression =
-          value.substring(indexOfLogicalOperator + presentLogicalExpression.length()).trim();
-
-      leftExpression = removeParentheses(leftExpression);
-      rightExpression = removeParentheses(rightExpression);
-
-      current = decideWhichLogicalExpressionIsParent(presentLogicalExpression);
-      current.setLeftNode(addRecursive(leftExpression));
-      current.setRightNode(addRecursive(rightExpression));
-    } else {
-      int indexOfParent = StackHelper.getIndexOfParentFromExpression(value);
-      String leftExpression = value.substring(0, indexOfParent);
-      String rightExpression = value.substring(indexOfParent + 2);
-      current =
-          decideWhichLogicalExpressionIsParent(value.substring(indexOfParent, indexOfParent + 2));
-      current.setLeftNode(addRecursive(leftExpression));
-      current.setRightNode(addRecursive(rightExpression));
+      return processExpressionWithOneLogicalExpression(value);
     }
+    return partitionExpressionFurther(value);
+  }
+
+  /**
+   * This method processes a string expression that exclusively contains a single logical
+   * expression, ready for division into nodes. The divided nodes are categorized into a parent
+   * node, which captures the remaining logical expression, while the children nodes receive values
+   * corresponding to specific data types through recursive processing.
+   *
+   * @param expression String containing only one logical expression
+   * @return Parent node containing logical expression
+   */
+  private Node processExpressionWithOneLogicalExpression(String expression) {
+    Node current;
+    String presentLogicalExpression = getRemainingLogicalExpression(expression);
+    int indexOfLogicalOperator = expression.indexOf(presentLogicalExpression);
+
+    String leftExpression = expression.substring(0, indexOfLogicalOperator).trim();
+    String rightExpression =
+        expression.substring(indexOfLogicalOperator + presentLogicalExpression.length()).trim();
+
+    leftExpression = removeParentheses(leftExpression);
+    rightExpression = removeParentheses(rightExpression);
+
+    current = getLogicalExpressionAsNodeByValue(presentLogicalExpression);
+    current.setLeftNode(addRecursive(leftExpression));
+    current.setRightNode(addRecursive(rightExpression));
     return current;
   }
 
-  private boolean containsOnlyOneExpression(String value) {
-    int g = 0;
-    if (value.contains("&&")) g++;
-    if (value.contains("OR")) g++;
-    if (value.contains("==")) g++;
-    if (value.contains("!=")) g++;
-    if (value.contains(">")) g++;
-    if (value.contains("<")) g++;
-    return g == 1;
+  /**
+   * This method handles a string expression containing multiple logical expressions that require
+   * partitioning. The partitioning process utilizes a stack to identify the parent logical
+   * expression. The string is then divided into two parts, with both segments undergoing recursion
+   * for further partitioning. Middle part is recognized as parent node.
+   *
+   * @param expression String containing more than one logical expression
+   * @return Parent node containing logical expression
+   */
+  private Node partitionExpressionFurther(String expression) {
+    Node current;
+    int indexOfParentExpression = StackHelper.getIndexOfParentExpression(expression);
+    String leftExpression = expression.substring(0, indexOfParentExpression);
+    String rightExpression = expression.substring(indexOfParentExpression + 2);
+    current =
+        getLogicalExpressionAsNodeByValue(
+            expression.substring(
+                indexOfParentExpression,
+                indexOfParentExpression + 2)); // što ako nije +2 npr nije "&&" nego ">"??
+    current.setLeftNode(addRecursive(leftExpression));
+    current.setRightNode(addRecursive(rightExpression));
+    return current;
   }
 
-  public ExpressionNode decideWhichLogicalExpressionIsParent(String value) {
+  /**
+   * Method used to evaluate if expression contains more than one logical expression.
+   *
+   * @param value String expression
+   * @return true if there is more than one logical expression in given string
+   */
+  private boolean containsOnlyOneLogicalExpression(String value) {
+    int g = 0;
+    String[] logicalOperators = {"&&", "or", "==", "!=", ">", "<"};
+
+    for (String operator : logicalOperators) {
+      if (operator.equals("or")) {
+        if (value.toLowerCase().matches("(.*\\b)or{1,2}(\\b.*)")) {
+          g++;
+          if (g > 1) {
+            return false;
+          }
+        }
+      } else {
+        if (value.toLowerCase().contains(operator)) {
+          g++;
+          if (g > 1) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  public ExpressionNode getLogicalExpressionAsNodeByValue(String value) {
     if (value.contains("&&")) return new LogicalAndExpressionNode(value, NodeType.EXPRESSION_NODE);
     if (value.contains("==")) return new EqualsExpressionOperator(value, NodeType.EXPRESSION_NODE);
     if (value.contains("OR") | value.contains("or"))
@@ -110,7 +151,7 @@ public class Tree {
     return value.replaceAll("[()]", "");
   }
 
-  public static String presentLogicalExpression(String value) {
+  public static String getRemainingLogicalExpression(String value) {
     if (value.contains("&&")) return "&&";
     if (value.contains("OR")) return "OR";
     if (value.contains("==")) return "==";

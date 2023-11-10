@@ -1,4 +1,4 @@
-package leapwise.soft.expressionevaluator.util;
+package leapwise.soft.expressionevaluator.model;
 
 import leapwise.soft.expressionevaluator.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;

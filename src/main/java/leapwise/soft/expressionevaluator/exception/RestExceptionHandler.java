@@ -6,7 +6,7 @@ import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpre
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoTreeGenerated;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NonComparableValuesException;
 import leapwise.soft.expressionevaluator.model.response.ErrorResponse;
-import leapwise.soft.expressionevaluator.util.ResponseHandler;
+import leapwise.soft.expressionevaluator.model.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

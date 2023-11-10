@@ -15,26 +15,100 @@ import java.util.stream.Collectors;
 public class StackHelper {
   private static Stack<StackNodeWrapper> stack = null;
 
-  public static void initStack() {
-    stack = new Stack<>();
-  }
-
-  public static int getIndexOfParentFromExpression(String expression) {
+  public static int getIndexOfParentExpression(String expression) {
     initStack();
-    generateStackBaseOnExpression(expression);
+    generateStackBasedOnExpression(expression);
 
     List<StackNodeWrapper> stackItems =
         stack.getStackArray().stream().filter(Objects::nonNull).collect(Collectors.toList());
 
-    List<StackNodeWrapper> operatorsOnStack =
+    List<StackNodeWrapper> filteredOperatorsOnStack =
         stackItems.stream()
             .filter(item -> item.getNode().getNodeType() != NodeType.STRING_NODE)
             .collect(Collectors.toList());
 
-    StackNodeWrapper stackNodeWrapperWinner = operatorsOnStack.get(0);
+    return findWinnerNode(filteredOperatorsOnStack).getIndex();
+  }
+
+  public static void initStack() {
+    stack = new Stack<>();
+  }
+
+  private static void generateStackBasedOnExpression(String expression) {
+    for (int index = 0; index < expression.length(); index++) {
+      char character = expression.charAt(index);
+
+      // Gate keeper evaluation
+      if (character != '('
+          && character != ')'
+          && character != '='
+          && character != 'o'
+          && character != 'O'
+          && character != '&'
+          && character != '!') {
+        continue;
+      }
+
+      if (character == '(') {
+        Node node = new CleanStringNode("(", NodeType.STRING_NODE);
+        stack.push(new StackNodeWrapper(node, index));
+      } else if (character == ')') {
+        Node node = new CleanStringNode(")", NodeType.STRING_NODE);
+        stack.push(new StackNodeWrapper(node, index));
+      } else if (character == '=') {
+        emptyStackTillItselfIsEmptyOrExpressionIsEncountered();
+        Node node = new EqualsExpressionOperator("==", NodeType.EXPRESSION_NODE);
+        node.setLevel(StackNodeWrapper.level);
+        stack.push(new StackNodeWrapper(node, index));
+        index = index + 1;
+      } else if (character == 'o' || character == 'O') {
+        if (!(isNextCharacter(expression.charAt(index + 2), ' '))) {
+          continue;
+        }
+        if (!(isNextCharacter(expression.charAt(index + 1), 'r')
+            || isNextCharacter(expression.charAt(index + 1), 'R'))) {
+          index = index + 1;
+          continue;
+        }
+
+        emptyStackTillItselfIsEmptyOrExpressionIsEncountered();
+        Node node = new OrExpressionNode("or", NodeType.EXPRESSION_NODE);
+        node.setLevel(StackNodeWrapper.level);
+        stack.push(new StackNodeWrapper(node, index));
+        index = index + 1;
+      } else if (character == '&') {
+        char nextCharMustBeOr = expression.charAt(index + 1);
+        if (!(nextCharMustBeOr == '&')) {
+          index = index + 1;
+          continue;
+        }
+
+        emptyStackTillItselfIsEmptyOrExpressionIsEncountered();
+        Node node = new LogicalAndExpressionNode("&&", NodeType.EXPRESSION_NODE);
+        node.setLevel(StackNodeWrapper.level);
+        stack.push(new StackNodeWrapper(node, index));
+        index = index + 1;
+      } else if (character == '!') {
+        char nextCharMustBeOr = expression.charAt(index + 1);
+        if (!(nextCharMustBeOr == '=')) {
+          index = index + 1;
+          continue;
+        }
+
+        emptyStackTillItselfIsEmptyOrExpressionIsEncountered();
+        Node node = new NotEqualsExpressionNode("!=", NodeType.EXPRESSION_NODE);
+        node.setLevel(StackNodeWrapper.level);
+        stack.push(new StackNodeWrapper(node, index));
+        index = index + 1;
+      }
+    }
+  }
+
+  private static StackNodeWrapper findWinnerNode(List<StackNodeWrapper> filteredOperatorsOnStack) {
+    StackNodeWrapper stackNodeWrapperWinner = filteredOperatorsOnStack.get(0);
     Node nodeWinner = stackNodeWrapperWinner.getNode();
 
-    for (StackNodeWrapper item : operatorsOnStack) {
+    for (StackNodeWrapper item : filteredOperatorsOnStack) {
       Node innerNode = item.getNode();
 
       if (innerNode.getLevel() == nodeWinner.getLevel()
@@ -47,100 +121,17 @@ public class StackHelper {
         stackNodeWrapperWinner = item;
       }
     }
-    return stackNodeWrapperWinner.getIndex();
+    return stackNodeWrapperWinner;
   }
 
-  public static void generateStackBaseOnExpression(String expression) {
-    StackNodeWrapper stackNodeWrapper;
-    for (int i = 0; i < expression.length(); i++) {
-      Node node;
-      char c = expression.charAt(i);
-
-      // Gate keeper evaluation
-      if (c != '(' && c != ')' && c != '=' && c != 'o' && c != 'O' && c != '&' && c != '!') {
-        continue;
-      }
-
-      if (c == '(') {
-        node = new CleanStringNode("(", NodeType.STRING_NODE);
-        stackNodeWrapper = new StackNodeWrapper(node, i);
-        stack.push(stackNodeWrapper);
-        continue;
-      } else if (c == ')') {
-        node = new CleanStringNode(")", NodeType.STRING_NODE);
-        stackNodeWrapper = new StackNodeWrapper(node, i);
-        stack.push(stackNodeWrapper);
-        continue;
-      }
-      if (c == '=') {
-
-        while (!stack.isEmpty()
-            && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
-                != NodeType.EXPRESSION_NODE) {
-          stack.pop();
-        }
-        node = new EqualsExpressionOperator("==", NodeType.EXPRESSION_NODE);
-        node.setLevel(StackNodeWrapper.level);
-        stackNodeWrapper = new StackNodeWrapper(node, i);
-        stack.push(stackNodeWrapper);
-        i = i + 1;
-        continue;
-      }
-      if (c == 'o' || c == 'O') {
-        char nextCharMustBeOr = expression.charAt(i + 1);
-        if (!(nextCharMustBeOr == 'r' || nextCharMustBeOr == 'R')) {
-          i = i + 1;
-          continue;
-        }
-
-        while (!stack.isEmpty()
-            && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
-                != NodeType.EXPRESSION_NODE) {
-          stack.pop();
-        }
-        node = new OrExpressionNode("or", NodeType.EXPRESSION_NODE);
-        node.setLevel(StackNodeWrapper.level);
-        stackNodeWrapper = new StackNodeWrapper(node, i);
-        stack.push(stackNodeWrapper);
-        i = i + 1;
-        continue;
-      }
-      if (c == '&') {
-        char nextCharMustBeOr = expression.charAt(i + 1);
-        if (!(nextCharMustBeOr == '&')) {
-          i = i + 1;
-          continue;
-        }
-        while (!stack.isEmpty()
-            && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
-                != NodeType.EXPRESSION_NODE) {
-          stack.pop();
-        }
-        node = new LogicalAndExpressionNode("&&", NodeType.EXPRESSION_NODE);
-        node.setLevel(StackNodeWrapper.level);
-        stackNodeWrapper = new StackNodeWrapper(node, i);
-        stack.push(stackNodeWrapper);
-        i = i + 1;
-        continue;
-      }
-      if (c == '!') {
-        char nextCharMustBeOr = expression.charAt(i + 1);
-        if (!(nextCharMustBeOr == '=')) {
-          i = i + 1;
-          continue;
-        }
-
-        while (!stack.isEmpty()
-            && ((StackNodeWrapper) stack.peek()).getNode().getNodeType()
-                != NodeType.EXPRESSION_NODE) {
-          stack.pop();
-        }
-        node = new NotEqualsExpressionNode("!=", NodeType.EXPRESSION_NODE);
-        node.setLevel(StackNodeWrapper.level);
-        stackNodeWrapper = new StackNodeWrapper(node, i);
-        stack.push(stackNodeWrapper);
-        i = i + 1;
-      }
+  private static void emptyStackTillItselfIsEmptyOrExpressionIsEncountered() {
+    while (!stack.isEmpty()
+        && ((StackNodeWrapper) stack.peek()).getNode().getNodeType() != NodeType.EXPRESSION_NODE) {
+      stack.pop();
     }
+  }
+
+  private static boolean isNextCharacter(char current, char next) {
+    return current == next;
   }
 }
