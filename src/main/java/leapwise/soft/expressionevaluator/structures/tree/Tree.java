@@ -6,6 +6,7 @@ import leapwise.soft.expressionevaluator.structures.tree.nodes.expression.Expres
 import leapwise.soft.expressionevaluator.structures.tree.nodes.expression.impl.equals.EqualsExpressionOperator;
 import leapwise.soft.expressionevaluator.structures.tree.nodes.expression.impl.equals.NotEqualsExpressionNode;
 import leapwise.soft.expressionevaluator.structures.tree.nodes.nothingnode.NullNode;
+import leapwise.soft.expressionevaluator.structures.tree.nodes.number.NumberNode;
 import leapwise.soft.expressionevaluator.structures.tree.nodes.string.impl.CleanStringNode;
 import leapwise.soft.expressionevaluator.structures.tree.nodes.string.impl.VariableStringNode;
 import leapwise.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
@@ -67,23 +68,27 @@ public class Tree {
       return new NullNode(value, NodeType.NULL_NODE);
     }
     if (!(value.contains("&&")
-        || value.contains("==")
-        || value.toLowerCase().matches("(.*\\b)or{1,2}(\\b.*)")
-        || value.contains("!=")
-        || value.contains(">")
-        || value.contains("<"))) {
+            || value.contains("==")
+            || value.toLowerCase().matches("(.*\\b)or{1,2}(\\b.*)")
+            || value.contains("!=")
+            || value.contains(">")
+            || value.contains("<"))) {
       if (value.equals("")) {
         return new CleanStringNode(
-            value,
-            NumericStringCheckerImpl.checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
+                value,
+                NumericStringCheckerImpl.checkIfNumericReturnBoolean(value)
+                        ? NodeType.NUMERIC_NODE
+                        : NodeType.STRING_NODE);
       }
       if (value.contains(".") || !(value.contains("\""))) {
         if (!(NumericStringCheckerImpl.checkIfNumericReturnBoolean(value))) {
           return new VariableStringNode(value, NodeType.VARIABLE_STRING_NODE);
         }
       }
-      return new CleanStringNode(
-          value, NumericStringCheckerImpl.checkIfNumericReturnBoolean(value) ? NodeType.NUMERIC_NODE : NodeType.STRING_NODE);
+      if (NumericStringCheckerImpl.checkIfNumericReturnBoolean(value)) {
+        return new NumberNode(value, NodeType.NUMERIC_NODE);
+      }
+      return new CleanStringNode(value, NodeType.STRING_NODE);
     }
 
     boolean containsOnlyOneExpression = containsOnlyOneLogicalExpression(value);
