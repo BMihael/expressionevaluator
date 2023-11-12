@@ -1,5 +1,5 @@
 # Expressionevaluator
-## Hiring <a href="https://github.com/leapwise/expression-evaluator">project</a> for lpws
+## Original <a href="https://github.com/leapwise/expression-evaluator">project</a>
 
 * Tehnologies :
     * Java 11
