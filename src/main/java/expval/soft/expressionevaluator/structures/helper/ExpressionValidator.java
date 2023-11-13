@@ -4,7 +4,13 @@ import expval.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMes
 import expval.soft.expressionevaluator.exception.algorithm.tree.EmptyExpressionException;
 import expval.soft.expressionevaluator.exception.algorithm.tree.NoLogicalExpressionException;
 
-public class ExpressionValidator {
+import static expval.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.UTILITY_CLASS_CANNOT_BE_INSTANTIATED;
+
+public final class ExpressionValidator {
+
+  private ExpressionValidator() {
+    throw new UnsupportedOperationException(UTILITY_CLASS_CANNOT_BE_INSTANTIATED);
+  }
 
   public static String checkValidityOfExpression(String expression) {
     if (expression == null || expression.isEmpty()) {

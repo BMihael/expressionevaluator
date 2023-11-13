@@ -7,7 +7,7 @@ public class VariableStringNode extends StringNode {
   private VariableStringNode child;
 
   public VariableStringNode(String value, NodeType type) {
-    super(value.substring(0, value.indexOf(".") == -1 ? value.length() : value.indexOf(".")), type);
+    super(value.substring(0, !value.contains(".") ? value.length() : value.indexOf(".")), type);
     if (value.contains("."))
       child =
           new VariableStringNode(

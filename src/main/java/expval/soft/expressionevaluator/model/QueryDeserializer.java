@@ -22,7 +22,7 @@ public class QueryDeserializer extends JsonDeserializer<ExpressionDynamicForm> {
     JsonNode node = jp.getCodec().readTree(jp);
     Iterator<Map.Entry<String, JsonNode>> nodeIterator = node.fields();
     ExpressionDynamicForm query = new ExpressionDynamicForm();
-    Map<String, Object> other = new HashMap<>();
+    Map<String, Object> entries = new HashMap<>();
 
     while (nodeIterator.hasNext()) {
       Map.Entry<String, JsonNode> entry = nodeIterator.next();
@@ -35,12 +35,8 @@ public class QueryDeserializer extends JsonDeserializer<ExpressionDynamicForm> {
           e.printStackTrace();
         }
       } else {
-        other.put(entry.getKey(), entry.getValue().textValue());
+        entries.put(entry.getKey(), entry.getValue().textValue());
       }
-    }
-
-    if (other.size() != 0) {
-      // query.setOther(other);
     }
 
     return query;

@@ -4,7 +4,13 @@ import expval.soft.expressionevaluator.exception.NonNumericStringException;
 import expval.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage;
 import expval.soft.expressionevaluator.structures.tree.nodes.Node;
 
-public class NumericStringCheckerImpl {
+import static expval.soft.expressionevaluator.exception.algorithm.AlgorithmExceptionMessage.UTILITY_CLASS_CANNOT_BE_INSTANTIATED;
+
+public final class NumericStringCheckerImpl {
+
+  private NumericStringCheckerImpl() {
+    throw new UnsupportedOperationException(UTILITY_CLASS_CANNOT_BE_INSTANTIATED);
+  }
 
   public static boolean areNumericEquals(Node n1, Node n2) {
     Double num1 = NumericStringCheckerImpl.checkIfNumeric(n1.getNodeValue());
