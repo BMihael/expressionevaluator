@@ -8,11 +8,11 @@
 		<version>2.7.17</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>leapwise.soft</groupId>
+	<groupId>expval.soft</groupId>
 	<artifactId>expressionevaluator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Expression Evaluator</name>
-	<description>Leapwise project implementing custom expression evaluator </description>
+	<description>Java project implementing custom expression evaluator</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
