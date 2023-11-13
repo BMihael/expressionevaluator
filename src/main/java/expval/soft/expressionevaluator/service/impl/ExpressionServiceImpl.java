@@ -11,12 +11,16 @@ import expval.soft.expressionevaluator.structures.tree.TreeProvider;
 import expval.soft.expressionevaluator.util.ExpressionStripper;
 import expval.soft.expressionevaluator.util.ExpressionStripperValues;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class ExpressionServiceImpl implements ExpressionService {
+
+  private static Logger logger = LoggerFactory.getLogger(ExpressionServiceImpl.class);
 
   public static final String EXCEPTION_WITH_NAME_ALREADY_EXISTS_IN_DATABASE =
       "An exception with the provided name already exists in the database.";
@@ -47,6 +51,7 @@ public class ExpressionServiceImpl implements ExpressionService {
                 .expressionValue(value)
                 .identifier(UUID.randomUUID().toString())
                 .build());
+    logger.info("Generated identifier: " + e.getIdentifier());
     return e.getIdentifier();
   }
 
