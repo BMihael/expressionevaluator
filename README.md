@@ -1,4 +1,4 @@
-# Expressionevaluator
+# Expression evaluator using tree data structure
 ## Original <a href="https://github.com/žleapwise/expression-evaluator">project</a>
 
 * Tehnologies :
